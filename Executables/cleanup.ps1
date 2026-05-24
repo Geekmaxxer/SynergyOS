@@ -26,3 +26,14 @@ foreach ($folderName in $foldersToRemove) {
 Stop-Process -Name 'StartMenuExperienceHost' -Force -ErrorAction SilentlyContinue
 Remove-Item "$env:LOCALAPPDATA\Microsoft\Windows\Shell\LayoutModification.xml" -Force -ErrorAction SilentlyContinue
 Remove-ItemProperty -Path "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Start" -Name "Config" -Force -ErrorAction SilentlyContinue
+
+Get-ChildItem "$env:LOCALAPPDATA\Packages" -Directory |
+    Where-Object { $_.Name -match "Microsoft.Windows.StartMenuExperienceHost" } |
+    ForEach-Object {
+        Remove-Item "$env:LOCALAPPDATA\Packages\$($_.Name)\LocalState" -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+Get-ChildItem "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\CloudStore\Store\Cache\DefaultAccount" -Recurse -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -match "start.tilegrid" } |
+    Remove-Item -Force
+Remove-ItemProperty -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Start" -Name Config -Force -ErrorAction SilentlyContinue
