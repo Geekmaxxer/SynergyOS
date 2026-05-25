@@ -6,8 +6,15 @@ actions:
   - !powerShell: {command: '.\suitability.ps1', exeDir: true, wait: true}
   - !cmd: {command: '"reg import runasti.reg', exeDir: true, wait: true, runas: currentUserElevated}
   - !writeStatus: {status: 'Backing up Services'}
-  - !powerShell: {command: '.\backup.ps1 -FilePath """$([Environment]::GetFolderPath(''Windows''))\ServicesBackup\DefaultServices.reg"""', wait: true, exeDir: true}
-
+  - !powerShell:
+   {exeDir: true,
+    wait: true,
+    command: |
+      $path = Join-Path ([Environment]::GetFolderPath('Windows')) "ServicesBackup\DefaultServices.reg"
+      
+      if (-not (Test-Path -Path $path -PathType Leaf)) {
+          .\backup.ps1 -FilePath $path
+      }}
 
 
   - !writeStatus {status: "Copying Files"}
@@ -94,4 +101,12 @@ actions:
   - !cmd: {command: '"updhealth.bat"', exeDir: true, runas: trustedInstaller, wait: true}
   - !powerShell: {command: '.\cleanup.ps1', exeDir: true, runas: trustedInstaller, wait: true}
   - !writeStatus: {status: 'Backing up Services'}
-  - !powerShell: {command: '.\backup.ps1 -FilePath """$([Environment]::GetFolderPath(''Windows''))\ServicesBackup\SynergyServices.reg"""', wait: true, exeDir: true}
+  - !powerShell:
+   {exeDir: true
+    wait: true
+    command: |
+      $path = Join-Path ([Environment]::GetFolderPath('Windows')) "ServicesBackup\SynergyServices.reg"
+      
+      if (-not (Test-Path -Path $path -PathType Leaf)) {
+          .\backup.ps1 -FilePath $path
+      }}
