@@ -16,7 +16,7 @@ for /f "tokens=*" %%i in ('powershell -NoProfile -Command "(Get-CimInstance -Cla
   Reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\%%i" /v "TcpDelAckTicks" /t REG_DWORD /d "0" /f
 ) 
 powershell "Disable-NetAdapterBinding -name "*" -componentid ms_lldp, ms_lltdio, ms_implat, ms_tcpip6, ms_rspndr, ms_server, ms_msclient" 
-powershell Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing Disabled
+powershell Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing Enabled
 powershell Set-NetOffloadGlobalSetting -PacketCoalescingFilter Disabled
 for /f %%a in ('Reg query "HKLM\SYSTEM\CurrentControlSet\Control\Class\{4d36e972-e325-11ce-bfc1-08002be10318}" /v "*SpeedDuplex" /s ^| findstr "HKEY"') do (
     Reg add %%a /v "AutoDisableGigabit" /t Reg_SZ /d "0" /f >> log.txt
