@@ -7,16 +7,16 @@ actions:
 
   - !cmd: {command: '"reg import runasti.reg', exeDir: true, wait: true, runas: currentUserElevated}
   
-  - !writeStatus: {status: 'Backing up Services'}
-  - !powerShell:
-    exeDir: true
-    wait: true
-    command: |
-      $path = Join-Path ([Environment]::GetFolderPath('Windows')) "ServicesBackup\DefaultServices.reg"
-      
-      if (-not (Test-Path -Path $path -PathType Leaf)) {
-          .\backup.ps1 -FilePath $path
-      }
+  #- !writeStatus: {status: 'Backing up Services'}
+  #- !powerShell:
+  #  exeDir: true
+  #  wait: true
+  #  command: |
+  #    $path = Join-Path ([Environment]::GetFolderPath('Windows')) "ServicesBackup\DefaultServices.reg"
+  #   
+  #    if (-not (Test-Path -Path $path -PathType Leaf)) {
+  #        .\backup.ps1 -FilePath $path
+  #    }
   
   - !writeStatus {status: "Copying Files"}
   - !cmd: {exeDir: true, command: 'xcopy "Windows" "%windir%" /E /I /Y'}
