@@ -101,9 +101,9 @@ ren "%WinDir%\System32\mobsync.exe" "mobsyncold.exe"
 :: disable background task logging
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-BackgroundTaskInfrastructure/Diagnostic" /v Enabled /t REG_DWORD /d 0 /f
 
-:: disable search indexing
-sc stop wsearch
-sc config wsearch start=disabled
+:: Windows Search - DO NOT DISABLE on Win11 25H2+, affects Start Menu responsiveness
+:: sc stop wsearch
+:: sc config wsearch start=disabled
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v PreventIndexOnBattery /t REG_DWORD /d 1 /f
 reg add "HKLM\Software\Microsoft\Windows Search\Gather\Windows\SystemIndex" /v RespectPowerModes /t REG_DWORD /d 1 /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences" /v WholeFileSystem /t REG_DWORD /d 1 /f

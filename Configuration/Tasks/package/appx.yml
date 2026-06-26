@@ -44,7 +44,8 @@ actions:
  - !appx: {name: '*Advertising*', type: family}
  - !appx: {name: '*MixedReality*', type: family}
  - !appx: {name: '*MSPaint*', type: family}
- - !appx: {name: '*StartExperiencesApp*', type: family}
+ # StartExperiencesApp - Only remove on legacy Windows, critical for shell performance on 25H2+
+ - !appx: {name: '*StartExperiencesApp*', type: family, option: 'win-legacy'}
  - !appx: {name: '*Windows.DevHome*', type: family}
  - !appx: {name: '*CrossDevice*', type: family}
  - !appx: {name: 'Microsoft.Copilot*', type: family}

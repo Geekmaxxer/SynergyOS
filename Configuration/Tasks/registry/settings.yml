@@ -106,8 +106,8 @@ actions:
  # svcsplit host
  - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control', value: 'SvcHostSplitThresholdInKB', type:  REG_DWORD, data: '4294967295'}
 
- # Disable Memory Compression
- - !powerShell: {command: 'Disable-MMAgent -MemoryCompression'}
+ # Memory Compression - Only disable on legacy Windows, required for app caching on 25H2+
+ - !powerShell: {command: 'Disable-MMAgent -MemoryCompression', option: 'win-legacy'}
 
  # disable defender
  - !status {status: 'Disable Defender', option: "disable-defender"}
