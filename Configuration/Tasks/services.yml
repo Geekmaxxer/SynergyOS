@@ -48,8 +48,7 @@ actions:
   - !service: {name: 'Spooler', operation: change, startup: 4}
   - !service: {name: 'SSDPSRV', operation: change, startup: 4}
   - !service: {name: 'stisvc', operation: change, startup: 4}
-  # SysMain (Superfetch) - Only disable on legacy Windows, required for app preloading on 25H2+
-  - !service: {name: 'sysmain', operation: change, startup: 4, option: 'win-legacy'}
+  - !service: {name: 'sysmain', operation: change, startup: 4}
   - !service: {name: 'TrkWks', operation: change, startup: 4}
   - !service: {name: 'TroubleshootingSvc', operation: change, startup: 4}
   - !service: {name: 'tzautoupdates', operation: change, startup: 4}
@@ -64,5 +63,3 @@ actions:
   - !service: {name: 'wisvc', operation: change, startup: 4}
   - !service: {name: 'WMPNetworkSvc', operation: change, startup: 4}
   - !service: {name: 'WpcMonSvc', operation: change, startup: 4}
-  # Windows Search - Only disable on legacy Windows, affects Start Menu responsiveness on 25H2+
-  - !service: {name: 'wsearch', operation: change, startup: 4, option: 'win-legacy'}
