@@ -1,1 +1,0 @@
-Synergy disables Sysmain, use this to re enable it if you use a HDD
