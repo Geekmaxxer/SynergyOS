@@ -36,7 +36,7 @@ SynergyOS is distributed as an `.apbx` playbook using AME Wizard.
 
 ## Contributing
 
-Want to help fix a bug or build a new feature? Open the [Issues](https://github.com/Synergy-Tweaks/SynergyOS/issues) tab to see individual tickets, or check the [project board](https://github.com/orgs/Synergy-Tweaks/projects) for a status view of what's in progress.
+Want to help fix a bug or build a new feature? Open the [Issues](https://github.com/Synergy-Tweaks/SynergyOS/issues) tab to see individual tickets, or check the [project board](https://github.com/orgs/Synergy-Tweaks/projects/1) for a status view of what's in progress.
 
 > [!TIP]
 > Comment on the issue you want to work on before starting, so we can assign it to you and you don't end up duplicating someone else's work.
