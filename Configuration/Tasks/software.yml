@@ -4,49 +4,33 @@ description: Install Software
 privilege: TrustedInstaller 
 actions:
 
-  # Brave
+  # Brave - downloads during OOBE after ISO injection
   - !status: {status: 'Installing Brave', option: 'browser-brave'}
-  - !download: {url: 'https://laptop-updates.brave.com/latest/winx64', destination: '%temp%\brave.exe', overwrite: true, option: 'browser-brave'}
-  - !cmd: {command: '"%temp%\brave.exe" /silent /install', runas: currentUserElevated, wait: true, option: 'browser-brave'}
+  - !download: {url: 'https://laptop-updates.brave.com/latest/winx64', destination: '%temp%\brave.exe', overwrite: true, option: 'browser-brave', oobe: true}
+  - !cmd: {command: '"%temp%\brave.exe" /silent /install', runas: currentUserElevated, wait: true, option: 'browser-brave', oobe: true}
   
-  # Chrome
+  # Chrome - downloads during OOBE after ISO injection
   - !status: {status: 'Installing Chrome', option: 'browser-chrome'}
-  - !download: {url: 'https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi', destination: '%temp%\chrome.msi', overwrite: true, option: 'browser-chrome'}
-  - !cmd: {command: 'msiexec /i "%temp%\chrome.msi" /qn', runas: currentUserElevated, wait: true, option: 'browser-chrome'}
+  - !download: {url: 'https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi', destination: '%temp%\chrome.msi', overwrite: true, option: 'browser-chrome', oobe: true}
+  - !cmd: {command: 'msiexec /i "%temp%\chrome.msi" /qn', runas: currentUserElevated, wait: true, option: 'browser-chrome', oobe: true}
   
-  # Firefox
+  # Firefox - downloads during OOBE after ISO injection
   - !status: {status: 'Installing Firefox', option: 'browser-firefox'}
-  - !download: {url: 'https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US', destination: '%temp%\firefox.exe', overwrite: true, option: 'browser-firefox'}
-  - !cmd: {command: '"%temp%\firefox.exe" /S', runas: currentUserElevated, wait: true, option: 'browser-firefox'}
+  - !download: {url: 'https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US', destination: '%temp%\firefox.exe', overwrite: true, option: 'browser-firefox', oobe: true}
+  - !cmd: {command: '"%temp%\firefox.exe" /S', runas: currentUserElevated, wait: true, option: 'browser-firefox', oobe: true}
   
-  # Helium
-  - !status: {status: 'Installing Helium', option: 'browser-helium'}
-  - !download: {git: 'https://github.com/imputnet/helium-windows', regex: '^helium_.*_x64-installer\.exe$', destination: '%temp%\helium.exe', overwrite: true, option: 'browser-helium'}
-  - !cmd: {command: '"%temp%\helium.exe" /S', runas: currentUserElevated, wait: true, option: 'browser-helium'}
-  
-  # Librewolf
-  - !status: {status: 'Installing Librewolf', option: 'browser-librewolf'}
-  - !download: {url: 'https://dl.librewolf.net/librewolf/150.0.1-1/librewolf-150.0.1-1-windows-x86_64-setup.exe', destination: '%temp%\librewolf.exe', overwrite: true, option: 'browser-librewolf'}
-  - !cmd: {command: '"%temp%\librewolf.exe" /S', runas: currentUserElevated, wait: true, option: 'browser-librewolf'}
-  
-  # Vivaldi
-  - !status: {status: 'Installing Vivaldi', option: 'browser-vivaldi'}
-  - !download: {url: 'https://downloads.vivaldi.com/stable/Vivaldi.6.9.3447.54.x64.exe', destination: '%temp%\vivaldi.exe', overwrite: true, option: 'browser-vivaldi'}
-  - !cmd: {command: '"%temp%\vivaldi.exe" --vivaldi-silent --do-not-launch-chrome', runas: currentUserElevated, wait: true, option: 'browser-vivaldi'}
-  
-  # Zen
-  - !status: {status: 'Installing Zen', option: 'browser-zen'}
-  - !download: {git: 'https://github.com/zen-browser/desktop', regex: '^zen\.installer\.exe$', destination: '%temp%\zen.exe', overwrite: true, option: 'browser-zen'}
-  - !cmd: {command: '"%temp%\zen.exe" /S', runas: currentUserElevated, wait: true, option: 'browser-zen'}
 
+  # Edge - downloads during OOBE after ISO injection
+#  - !status: {status: 'Installing Edge', option: 'browser-edge'}
+#  - !download: {url: 'https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/05790884-7913-4527-8768-041720203100/MicrosoftEdgeEnterpriseX64.msi', destination: '%temp%\edge.msi', overwrite: true, option: 'browser-edge', oobe: true}
+#  - !cmd: {command: 'msiexec /i "%temp%\edge.msi" /qn', runas: currentUserElevated, wait: true, option: 'browser-edge', oobe: true}
 
-  # VCRedist
+  # VCRedist - downloads during OOBE after ISO injection
   - !status: {status: 'Installing VCRedist'}
-  - !download: {git: 'https://github.com/abbodi1406/vcredist', regex: '^VisualCppRedist_AIO_x86_x64\.exe$', destination: '%temp%\vcredist.exe', overwrite: true}
-  - !cmd: {command: '"%temp%\vcredist.exe" /ai /gm2', runas: currentUserElevated, wait: true}
+  - !download: {git: 'https://github.com/abbodi1406/vcredist', regex: '^VisualCppRedist_AIO_x86_x64\.exe$', destination: '%temp%\vcredist.exe', overwrite: true, oobe: true}
+  - !cmd: {command: '"%temp%\vcredist.exe" /ai /gm2', runas: currentUserElevated, wait: true, oobe: true}
   
-  # 7-Zip
+  # 7-Zip - downloads during OOBE after ISO injection
   - !status: {status: 'Installing 7-Zip'}
-  - !download: {git: 'https://github.com/ip7z/7zip', regex: '^7z.*-x64\.exe$', destination: '%temp%\7Zip.exe', overwrite: true}
-  - !cmd: {command: '"%temp%\7Zip.exe" /S', runas: currentUserElevated, wait: true}
-    
+  - !download: {git: 'https://github.com/ip7z/7zip', regex: '^7z.*-x64\.exe$', destination: '%temp%\7Zip.exe', overwrite: true, oobe: true}
+  - !cmd: {command: '"%temp%\7Zip.exe" /S', runas: currentUserElevated, wait: true, oobe: true}

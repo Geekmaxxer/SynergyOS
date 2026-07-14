@@ -16,25 +16,26 @@ actions:
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\settingSync\Groups\Personalization', value: 'Enabled', type: REG_DWORD, data: '0'}
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\settingSync\Groups\StartLayout', value: 'Enabled', type: REG_DWORD, data: '0'}
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\settingSync\Groups\Windows', value: 'Enabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablesettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablesettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableAppSyncsettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableAppSyncsettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableApplicationsettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableApplicationsettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableCredentialssettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableCredentialssettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableDesktopThemesettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableDesktopThemesettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablePersonalizationsettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablePersonalizationsettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableStartLayoutsettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableStartLayoutsettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableSyncOnPaidNetwork', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWebBrowsersettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWebBrowsersettingSyncUserOverride', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWindowssettingSync', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWindowssettingSyncUserOverride', type: REG_DWORD, data: '1'}
+ # HKLM policies can run during ISO injection
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablesettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablesettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableAppSyncsettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableAppSyncsettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableApplicationsettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableApplicationsettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableCredentialssettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableCredentialssettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableDesktopThemesettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableDesktopThemesettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablePersonalizationsettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisablePersonalizationsettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableStartLayoutsettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableStartLayoutsettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableSyncOnPaidNetwork', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWebBrowsersettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWebBrowsersettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWindowssettingSync', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\settingSync', value: 'DisableWindowssettingSyncUserOverride', type: REG_DWORD, data: '1', iso: true}
 
  # disable transparancy and enable dark mode
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize', value: 'AppsUseLightTheme', type: REG_DWORD, data: '0'}
@@ -76,10 +77,10 @@ actions:
  # hide search box
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Search', value: 'SearchboxTaskbarMode', type: REG_DWORD, data: '0'}
 
- # hide recommended section in start menu
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'HideRecommendedSection', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education', value: 'IsEducationEnvironment', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'HideRecommendedSection', type: REG_DWORD, data: '1'}
+ # hide recommended section in start menu (can run during ISO injection)
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'HideRecommendedSection', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Education', value: 'IsEducationEnvironment', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'HideRecommendedSection', type: REG_DWORD, data: '1', iso: true}
 
  # configure explorer
  - !registryValue: {path: 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced', value: 'DontPrettyPath', type: REG_DWORD, data: '1'}
@@ -90,39 +91,41 @@ actions:
  # enable classic context menu
  - !registryValue: {path: 'HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32', value: '', type: REG_SZ, data: ''}
 
-  # disable game bar
- - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\GameBar', value: 'AllowAutoGameMode', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\GameBar', value: 'AutoGameModeEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\GameBar', value: 'GamePanelStartupTipIndex', type: REG_DWORD, data: '3'}
- - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\GameBar', value: 'ShowStartupPanel', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\GameBar', value: 'UseNexusForGameBarEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\GameDVR', value: 'AppCaptureEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR', value: 'AllowGameDVR', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR', value: 'value', type: REG_DWORD, data: '0'}   
+ # Win32Prio (can run during ISO injection)
+ - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control\PriorityControl', value: 'Win32PrioritySeparation', type: REG_DWORD, data: '36', iso: true}
+
+ # Disable opening gamebar when pressing the xbox button on an xbox controller
+ - !registryValue: {path: 'HKCU\Software\Microsoft\GameBar', value: 'UseNexusForGameBarEnabled', type: REG_DWORD, data: '0'}
+ # disable opening gamebarr when connecting xbox controller
+ - !registryValue: {path: 'HKCR\ms-gamebar', value: '', type: REG_SZ, data: 'URL:ms-gamebar'}
+ - !registryValue: {path: 'HKCR\ms-gamebar', value: 'URL Protocol', type: REG_SZ, data: ''}
+ - !registryValue: {path: 'HKCR\ms-gamebar', value: 'NoOpenWith', type: REG_SZ, data: ''}
+ - !registryValue: {path: 'HKCR\ms-gamebar\shell\open\command', value: '', type: REG_EXPAND_SZ, data: '%WINDIR%\System32\systray.exe'}
 
  # disable widgets
  - !registryValue: {path: 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced', value: 'TaskbarDa', type: REG_DWORD, data: '0'}
 
- # svcsplit host
- - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control', value: 'SvcHostSplitThresholdInKB', type:  REG_DWORD, data: '4294967295'}
+ # svcsplit host (can run during ISO injection)
+ - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control', value: 'SvcHostSplitThresholdInKB', type:  REG_DWORD, data: '4294967295', iso: true}
+
+ # remove gallery in file explorer
+ - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace_41040327\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}', operation: delete}
 
  # Disable Memory Compression
- - !powerShell: {command: 'Disable-MMAgent -MemoryCompression'}
+ - !powerShell: {command: 'Disable-MMAgent -MemoryCompression', wait: true}
 
- # disable defender
- - !status {status: 'Disable Defender', option: "disable-defender"}
- - !powerShell:
-    command: '.\defender.bat' 
-    exeDir: true
-    runas: trustedInstaller
-    option: 'disable-defender'
-    wait: true
+ # disable windows defender
+ - !cmd: {command: '"defender.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-defender"}
 
-   # disable xbox services
- - !status {status: 'Disable Xbox', option: "disable-xbox"}
- - !powerShell:
-    command: '.\xbox.bat' 
-    exeDir: true
-    runas: trustedInstaller
-    option: 'disable-xbox'
-    wait: true
+ - !cmd: {command: '"mitigations.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-mitigations"}
+
+ - !cmd: {command: '"xbox.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-xbox"}
+
+ - !writeStatus {status: "Optimizing Network"}
+ - !cmd: {command: '"network.bat"', runas: trustedInstaller, exeDir: true, wait: true}
+  
+ - !writeStatus {status: "Disabling Devices"}
+ - !powerShell: {command: '.\devices.ps1', runas: trustedInstaller, exeDir: true, wait: true}
+
+ - !writeStatus {status: "Disabling Power Saving"}
+ - !cmd: {command: '"power.bat"', runas: trustedInstaller, exeDir: true, wait: true}

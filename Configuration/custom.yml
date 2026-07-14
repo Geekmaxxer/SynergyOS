@@ -3,107 +3,91 @@ title: Custom
 privilege: trustedInstaller
 actions:
 
-  - !powerShell: {command: '.\suitability.ps1', exeDir: true, wait: true}
+ - !powerShell: {command: '.\suitability.ps1', exeDir: true, wait: true, oobe: false}
 
-  - !cmd: {command: '"reg import runasti.reg', exeDir: true, wait: true, runas: currentUserElevated}
-  
-  #- !writeStatus: {status: 'Backing up Services'}
-  #- !powerShell:
-  #  exeDir: true
-  #  wait: true
-  #  command: |
-  #    $path = Join-Path ([Environment]::GetFolderPath('Windows')) "ServicesBackup\DefaultServices.reg"
-  #   
-  #    if (-not (Test-Path -Path $path -PathType Leaf)) {
-  #        .\backup.ps1 -FilePath $path
-  #    }
-  
-  - !writeStatus {status: "Copying Files"}
-  - !cmd: {exeDir: true, command: 'xcopy "Windows" "%windir%" /E /I /Y'}
-  - !cmd: {exeDir: true, command: 'xcopy  "SOS" "%systemdrive%\SOS" /E /I /Y'}
-  - !cmd: {exeDir: true, command: 'move /y "SOS.lnk" "%USERPROFILE%\Desktop"'}
+ - !cmd: {command: 'reg import RunAsTI.reg', exeDir: true, wait: true, runas: currentUserElevated}
 
-  - !registryValue:
+ - !writeStatus {status: "Copying Files"}
+ - !cmd: {exeDir: true, command: 'xcopy "Windows" "%windir%" /E /I /Y', wait: true}
+ - !cmd: {exeDir: true, command: 'xcopy "SOS" "%systemdrive%\SOS" /E /I /Y', wait: true}
+ - !cmd: {exeDir: true, command: 'robocopy "User Account Pictures" "%ProgramData%\Microsoft\User Account Pictures"'}
+
+ - !powerShell:
+      command: 'Copy-Item -Path ".\SOS.lnk" -Destination "$env:PUBLIC\Desktop\SOS.lnk" -Force'
+      exeDir: true
+      wait: true
+
+ - !registryValue:
     path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings\Windows.SystemToast.SecurityAndMaintenance'
     value: 'Enabled'
     type: REG_DWORD
     data: '0'
 
+
   # OEM Information
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'Model', type: REG_SZ, data: 'SYNERGYOS'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'Manufacturer', type: REG_SZ, data: 'Kwanteks'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'SupportURL', type: REG_SZ, data: 'https://discord.gg/kwanteks'}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'Model', type: REG_SZ, data: 'SYNERGYOS', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'Manufacturer', type: REG_SZ, data: 'Kwanteks', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'SupportURL', type: REG_SZ, data: 'https://discord.gg/kwanteks', iso: true}
 
-  # Disable UAC
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type:  REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type:  REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type:  REG_DWORD, data: '0'}
-  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ValidateAdminCodeSignatures', type:  REG_DWORD, data: '0'}
+  # Set Registered Owner/Organization (shows in About Windows)
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOwner', type: REG_SZ, data: 'SynergyOS', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOrganization', type: REG_SZ, data: 'Kwanteks', iso: true}
 
-  # Win32Prio
-  - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control\PriorityControl', value: 'Win32PrioritySeparation', type: REG_DWORD, data: '36'}
+  # Disable UAC (can run during ISO injection)
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type:  REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type:  REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type:  REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ValidateAdminCodeSignatures', type:  REG_DWORD, data: '0', iso: true}
 
-  - !writeStatus {status: "Installing Software"}
-  - !task: {path: 'Tasks\software.yml'}
+ - !writeStatus {status: "Installing Software"}
+ - !task: {path: 'Tasks\software.yml'}
 
  # Registry Tweaks
-  - !writeStatus {status: "Disabling Windows Updates"}
-  - !task {path: 'Tasks\updates\update.yml'}
-  - !task {path: 'Tasks\updates\driver.yml'}
+ - !writeStatus {status: "Disabling Windows Updates"}
+ - !task {path: 'Tasks\updates\update.yml'}
+ - !task {path: 'Tasks\updates\driver.yml'}
 
-  - !writeStatus {status: "Configuring Privacy"}
-  - !task {path: 'Tasks\registry\privacy.yml'}
+ - !writeStatus {status: "Removing AppX Packages"}
+ - !task {path: 'Tasks\package\appx.yml'}
+ - !task {path: 'Tasks\package\components.yml'}
 
-  - !writeStatus {status: 'Configuring Settings'}
-  - !task {path: 'Tasks\registry\settings.yml'}
+ - !writeStatus {status: "Configuring Privacy"}
+ - !task {path: 'Tasks\registry\privacy.yml'}
 
-  - !writeStatus {status: "Removing AppX Packages"}
-  - !task {path: 'Tasks\package\appx.yml'}
+ - !writeStatus {status: 'Configuring Settings'}
+ - !task {path: 'Tasks\registry\settings.yml'}
   
-  - !writeStatus {status: "Removing OneDrive"}
-  - !cmd: {command: '"oned.bat"', exeDir: true, runas: trustedInstaller, wait: true}
+ - !writeStatus {status: "Disabling Services"}
+ - !task {path: 'Tasks\services.yml'}
 
-  - !writeStatus {status: "Disabling Power Saving"}
-  - !cmd: {command: '"power.bat"', runas: trustedInstaller, exeDir: true, wait: true}
-  
-  - !writeStatus {status: "Disabling Services"}
-  - !task {path: 'Tasks\services.yml'}
-  
-  - !writeStatus {status: "Optimizing Network"}
-  - !cmd: {command: '"network.bat"', runas: trustedInstaller, exeDir: true, wait: true}
-  
-  - !writeStatus {status: "Disabling Devices"}
-  - !powerShell: {command: '.\devices.ps1', runas: trustedInstaller, exeDir: true, wait: true}
-  
-  - !writeStatus {status: "Configuring Visuals"}
-  - !cmd: {command: '"visuals.bat"', runas: trustedInstaller, exeDir: true, wait: true}
-  
-  - !powerShell: {command: '.\wallpaper.ps1 -Mode Desktop -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, runas: currentUserElevated}
-  - !powerShell: {command: '.\wallpaper.ps1 -Mode LockScreen -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, runas: currentUserElevated}
-  
-  - !writeStatus {status: "Disabling Defender", option: "disable-defender"}
-  - !cmd: {command: '"defender.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-defender"}
-  
-  - !writeStatus {status: "Disabling Mitigations"}
-  - !cmd: {command: '"mitigations.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-mitigations"}
-  
-  - !writeStatus {status: "Disabling Xbox Services", option: "disable-xbox"}
-  - !cmd: {command: '"xbox.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-xbox"}
+ - !writeStatus {status: "Applying Wallpaper"}
+ - !powerShell: {command: '.\wallpaper.ps1 -Mode Desktop -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, runas: currentUserElevated}
+ - !powerShell: {command: '.\wallpaper.ps1 -Mode LockScreen -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, runas: currentUserElevated}
 
-  - !writeStatus {status: "Optimizing PowerShell"}
-  - !run:
+
+ - !writeStatus {status: "Optimizing PowerShell"}
+ - !run:
     exeDir: true
     exe: "powershell"
     args: '-NoP -ExecutionPolicy Bypass -File ngen.ps1'
     weight: 50
 
-  - !writeStatus {status: "Finalizing"}
-  - !cmd: {command: '"final.bat"', exeDir: true, runas: trustedInstaller, wait: true}
-  - !cmd: {command: '"updhealth.bat"', exeDir: true, runas: trustedInstaller, wait: true}
-  - !powerShell: {command: '.\cleanup.ps1', exeDir: true, runas: trustedInstaller, wait: true}
+ - !writeStatus {status: "Finalizing"}
+ - !cmd: {command: '"startmen.cmd"', runas: trustedInstaller, exeDir: true, wait: true}
+ - !powerShell:
+    command: |
+      $explorerProcess = Get-Process -Name explorer -ErrorAction SilentlyContinue
+      if ($explorerProcess) {
+        Stop-Process -Name explorer -Force
+      }
+      Start-Process explorer
+    runas: currentUserElevated 
+ - !cmd: {command: '"final.bat"', exeDir: true, runas: trustedInstaller, wait: true}
+ - !cmd: {command: '"updhealth.bat"', exeDir: true, runas: trustedInstaller, wait: true}
+ - !powerShell: {command: '.\cleanup.ps1', exeDir: true, runas: trustedInstaller, wait: true}
 
-  - !writeStatus: {status: 'Backing up Services'}
-  - !powerShell:
+ - !writeStatus: {status: 'Backing up Services'}
+ - !powerShell:
     exeDir: true
     wait: true
     command: |

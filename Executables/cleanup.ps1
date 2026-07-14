@@ -24,7 +24,6 @@ foreach ($folderName in $foldersToRemove) {
 }
 
 Stop-Process -Name 'StartMenuExperienceHost' -Force -ErrorAction SilentlyContinue
-Remove-Item "$env:LOCALAPPDATA\Microsoft\Windows\Shell\LayoutModification.xml" -Force -ErrorAction SilentlyContinue
 Remove-ItemProperty -Path "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Start" -Name "Config" -Force -ErrorAction SilentlyContinue
 
 Get-ChildItem "$env:LOCALAPPDATA\Packages" -Directory |

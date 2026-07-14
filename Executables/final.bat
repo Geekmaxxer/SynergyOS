@@ -5,17 +5,14 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 :: clear pinned taskbar shortcuts
 del /f /q "%AppData%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar*"
 
-
 :: remove onedrive from file explorer sidebar
 Reg add "HKEY_CLASSES_ROOT\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}" /v System.IsPinnedToNameSpaceTree /t REG_DWORD /d 0 /f
-
 
 :: remove oned and msedge shortcut from startup
 Reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "OneDrive" /f
 for /f "tokens=1" %%a in ('Reg query "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" ^| findstr /i "MicrosoftEdgeAutoLaunch"') do (
   Reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "%%a" /f
 )
-
 
 :: write cache policy
 for /f "tokens=*" %%i in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\SCSI" ^| findstr "HKEY"') do (
@@ -25,33 +22,30 @@ for /f "tokens=*" %%i in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\SCSI" ^
     )
 )
 
-
-:: clear taskband registry
-Reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" /f
+:: disable copilot on taskbar
+Reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v ShowCopilotButton /t REG_DWORD /d 0 /f
 
 
 :: configure boot settings
 bcdedit /timeout 10
 bcdedit /set disabledynamictick yes
-bcdedit /set bootmenupolicy Legacy
-bcdedit /set nx optin
 bcdedit /deletevalue useplatformclock
 bcdedit /deletevalue useplatformtick
+bcdedit /set bootmenupolicy Legacy
+bcdedit /set nx optin
 
 :: disable DMA remapping
 for /f %%i in ('Reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services" /s /f DmaRemappingCompatible ^| find /i "Services\" ') do (
 	Reg add "%%i" /v "DmaRemappingCompatible" /t REG_DWORD /d "0" /f
 )
 
-:: configure mmcss
+:: configure MMCSSS
 Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" /v "SystemResponsiveness" /t REG_DWORD /d "10" /f
-
 
 Reg add "HKCU\Control Panel\Desktop" /v AutoEndTasks /t REG_SZ /d 1 /f
 Reg add "HKCU\Control Panel\Desktop" /v HungAppTimeout /t REG_SZ /d 1500 /f
 Reg add "HKCU\Control Panel\Desktop" /v WaitToKillTimeout /t REG_SZ /d 2500 /f
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control" /v WaitToKillServiceTimeout /t REG_SZ /d 2500 /f
-
 
 :: disable game bar
 Reg add "HKCU\SOFTWARE\Microsoft\GameBar" /v "AllowAutoGameMode" /t REG_DWORD /d "0" /f 
@@ -72,11 +66,13 @@ for /f "tokens=*" %%i in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\SCSI" ^
 )
 
 :: configure NTFS settings
-fsutil behavior set disablelastaccess 1 >NUL 2>nul
-fsutil behavior set disable8dot3 1 >NUL 2>nul
-fsutil behavior set disablecompression 1 >NUL 2>nul
-fsutil quota disable C: >NUL 2>nul
+fsutil behavior set disablelastaccess 1
+fsutil behavior set disable8dot3 1
+fsutil behavior set disablecompression 1
+fsutil quota disable C:
 
+:: configure powershell
+powershell Set-ExecutionPolicy Unrestricted -Force
 setx POWERSHELL_TELEMETRY_OPTOUT 1
 
 :: Disable VBS
@@ -98,20 +94,27 @@ takeown /f "%WinDir%\System32\mobsync.exe" /a
 icacls "%WinDir%\System32\mobsync.exe" /grant Administrators:(F) 
 ren "%WinDir%\System32\mobsync.exe" "mobsyncold.exe"
 
-:: disable background task logging
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-BackgroundTaskInfrastructure/Diagnostic" /v Enabled /t REG_DWORD /d 0 /f
 
 :: disable search indexing
 sc stop wsearch
 sc config wsearch start=disabled
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v PreventIndexOnBattery /t REG_DWORD /d 1 /f
-reg add "HKLM\Software\Microsoft\Windows Search\Gather\Windows\SystemIndex" /v RespectPowerModes /t REG_DWORD /d 1 /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences" /v WholeFileSystem /t REG_DWORD /d 1 /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences" /v SystemFolders /t REG_DWORD /d 0 /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences" /v EnableNaturalQuerySyntax /t REG_DWORD /d 0 /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\Preferences" /v ArchivedFiles /t REG_DWORD /d 0 /f
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Search\PrimaryProperties\UnindexedLocations" /v SearchOnly /t REG_DWORD /d 1 /f
 
+:: trying to disable sysmain a second time here because sometimes it doesnt
+sc stop sysmain
+sc config sysmain start=disabled
+
+:: Session Manager
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d "0" /f
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "IdleScanInterval" /t REG_DWORD /d "0" /f
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "SerializeTimerExpiration" /t REG_DWORD /d "1" /f
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "TimerCheckFlags" /t REG_DWORD /d "0" /f
+
+:: WDF
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Wdf" /v "WdfGlobalLogsDisabled" /t REG_DWORD /d "1" /f
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Wdf" /v "WdfGlobalSleepStudyDisabled" /t REG_DWORD /d "1" /f
+
+:: Enable HAGS
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "HwSchMode" /t REG_DWORD /d "2" /f
 
 :: Get the version number from the `ver` command
 for /f "tokens=3 delims=[]. " %%a in ('ver') do set version=%%a
@@ -135,7 +138,6 @@ if not defined w11 (
 :: add new batch file to context menu
 Reg add "HKEY_LOCAL_MACHINE\Software\Classes\.bat\ShellNew" /v "ItemName" /t REG_EXPAND_SZ /d "@C:\Windows\System32\acppage.dll,-6002" /f 
 Reg add "HKEY_LOCAL_MACHINE\Software\Classes\.bat\ShellNew" /v "NullFile" /t REG_SZ /d "" /f 
-
 
 :: add new reg file to context menu
 Reg add "HKEY_LOCAL_MACHINE\Software\Classes\.reg\ShellNew" /v "ItemName" /t REG_EXPAND_SZ /d "@C:\Windows\regedit.exe,-309" /f 
