@@ -4,33 +4,53 @@ description: Install Software
 privilege: TrustedInstaller 
 actions:
 
-  # Brave - downloads during OOBE after ISO injection
+  # Utilities - 7-Zip, Visual C++ Runtimes, DirectX
+  - !status: {status: 'Installing Software'}
+  - !powerShell:
+      command: '.\SOFTWARE.ps1'
+      exeDir: true
+      wait: true
+      weight: 150
+      runas: currentUserElevated
+      oobe: true
+
+  # SynToolkit
+  - !status: {status: 'Installing SynToolkit'}
+  - !powerShell:
+      command: '.\SOFTWARE.ps1 -SynToolkit'
+      exeDir: true
+      wait: true
+      weight: 100
+      runas: currentUserElevated
+      oobe: true
+
+  # Browsers
   - !status: {status: 'Installing Brave', option: 'browser-brave'}
-  - !download: {url: 'https://laptop-updates.brave.com/latest/winx64', destination: '%temp%\brave.exe', overwrite: true, option: 'browser-brave', oobe: true}
-  - !cmd: {command: '"%temp%\brave.exe" /silent /install', runas: currentUserElevated, wait: true, option: 'browser-brave', oobe: true}
-  
-  # Chrome - downloads during OOBE after ISO injection
-  - !status: {status: 'Installing Chrome', option: 'browser-chrome'}
-  - !download: {url: 'https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi', destination: '%temp%\chrome.msi', overwrite: true, option: 'browser-chrome', oobe: true}
-  - !cmd: {command: 'msiexec /i "%temp%\chrome.msi" /qn', runas: currentUserElevated, wait: true, option: 'browser-chrome', oobe: true}
-  
-  # Firefox - downloads during OOBE after ISO injection
+  - !powerShell:
+      command: '.\SOFTWARE.ps1 -Brave'
+      exeDir: true
+      wait: true
+      weight: 120
+      option: 'browser-brave'
+      runas: currentUserElevated
+      oobe: true
+
   - !status: {status: 'Installing Firefox', option: 'browser-firefox'}
-  - !download: {url: 'https://download.mozilla.org/?product=firefox-latest&os=win64&lang=en-US', destination: '%temp%\firefox.exe', overwrite: true, option: 'browser-firefox', oobe: true}
-  - !cmd: {command: '"%temp%\firefox.exe" /S', runas: currentUserElevated, wait: true, option: 'browser-firefox', oobe: true}
-  
+  - !powerShell:
+      command: '.\SOFTWARE.ps1 -Firefox'
+      exeDir: true
+      wait: true
+      weight: 120
+      option: 'browser-firefox'
+      runas: currentUserElevated
+      oobe: true
 
-  # Edge - downloads during OOBE after ISO injection
-#  - !status: {status: 'Installing Edge', option: 'browser-edge'}
-#  - !download: {url: 'https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/05790884-7913-4527-8768-041720203100/MicrosoftEdgeEnterpriseX64.msi', destination: '%temp%\edge.msi', overwrite: true, option: 'browser-edge', oobe: true}
-#  - !cmd: {command: 'msiexec /i "%temp%\edge.msi" /qn', runas: currentUserElevated, wait: true, option: 'browser-edge', oobe: true}
-
-  # VCRedist - downloads during OOBE after ISO injection
-  - !status: {status: 'Installing VCRedist'}
-  - !download: {git: 'https://github.com/abbodi1406/vcredist', regex: '^VisualCppRedist_AIO_x86_x64\.exe$', destination: '%temp%\vcredist.exe', overwrite: true, oobe: true}
-  - !cmd: {command: '"%temp%\vcredist.exe" /ai /gm2', runas: currentUserElevated, wait: true, oobe: true}
-  
-  # 7-Zip - downloads during OOBE after ISO injection
-  - !status: {status: 'Installing 7-Zip'}
-  - !download: {git: 'https://github.com/ip7z/7zip', regex: '^7z.*-x64\.exe$', destination: '%temp%\7Zip.exe', overwrite: true, oobe: true}
-  - !cmd: {command: '"%temp%\7Zip.exe" /S', runas: currentUserElevated, wait: true, oobe: true}
+  - !status: {status: 'Installing Chrome', option: 'browser-chrome'}
+  - !powerShell:
+      command: '.\SOFTWARE.ps1 -Chrome'
+      exeDir: true
+      wait: true
+      weight: 120
+      option: 'browser-chrome'
+      runas: currentUserElevated
+      oobe: true
