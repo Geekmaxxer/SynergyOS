@@ -54,3 +54,9 @@ actions:
       option: 'browser-chrome'
       runas: currentUserElevated
       oobe: true
+
+  - !status: {status: 'Installing .NET 8 Desktop Runtime'}
+  - !download: {url: 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe', destination: '%temp%\dotnet8_desktop_x64.exe', overwrite: true}
+  - !download: {url: 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x86.exe', destination: '%temp%\dotnet8_desktop_x86.exe', overwrite: true}
+  - !cmd: {command: '"%temp%\dotnet8_desktop_x64.exe" /install /quiet /norestart', runas: currentUserElevated, wait: true}
+  - !cmd: {command: '"%temp%\dotnet8_desktop_x86.exe" /install /quiet /norestart', runas: currentUserElevated, wait: true}
