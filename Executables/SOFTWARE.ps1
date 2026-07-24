@@ -24,7 +24,7 @@ Push-Location $tempDir
 
 # SynToolkit
 if ($SynToolkit) {
-    & curl.exe -LSs "https://github.com/Synergy-Tweaks/cat/releases/download/1.5/SynToolkit-Setup.exe" -o "$tempDir\SynToolkit-Setup.exe" $timeouts
+    & curl.exe -LSs "https://github.com/Synergy-Tweaks/SynToolkit/releases/download/1.5/SynToolkit-Setup.exe" -o "$tempDir\SynToolkit-Setup.exe" $timeouts
     if (!$?) {
         Write-Error "Downloading SynToolkit failed."
         exit 1
