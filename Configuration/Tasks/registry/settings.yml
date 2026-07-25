@@ -66,7 +66,7 @@ actions:
  - !run: {exe: 'wevtutil.exe', args: 'set-log "Microsoft-Windows-SleepStudy/Diagnostic" /e:false'}
  - !run: {exe: 'wevtutil.exe', args: 'set-log "Microsoft-Windows-Kernel-Processor-Power/Diagnostic" /e:false'}
  - !run: {exe: 'wevtutil.exe', args: 'set-log "Microsoft-Windows-UserModePowerService/Diagnostic" /e:false'}
- - !run: {exe: 'schtasks', args: '/Change /TN "\\Microsoft\\Windows\\Power Efficiency Diagnostics\\AnalyzeSystem" /Disable'}
+ - !run: {exe: 'schtasks', args: '/Change /TN "\Microsoft\Windows\Power Efficiency Diagnostics\AnalyzeSystem" /Disable'}
 
  # set ps1 files to open by default
  - !registryValue: {path: 'HKEY_CLASSES_ROOT\Microsoft.PowerShellScript.1\Shell\Open\Command', value: '@', type: REG_SZ, data: '"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -File "%1"'}
@@ -83,10 +83,10 @@ actions:
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'HideRecommendedSection', type: REG_DWORD, data: '1', iso: true}
 
  # configure explorer
- - !registryValue: {path: 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced', value: 'DontPrettyPath', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced', value: 'HideFileExt', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced', value: 'DisallowShaking', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer', value: 'NoInstrumentation', type: REG_DWORD, data: '1'}
+ - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'DontPrettyPath', type: REG_DWORD, data: '1'}
+ - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'HideFileExt', type: REG_DWORD, data: '0'}
+ - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'DisallowShaking', type: REG_DWORD, data: '1'}
+ - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer', value: 'NoInstrumentation', type: REG_DWORD, data: '1'}
  
  # enable classic context menu
  - !registryValue: {path: 'HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32', value: '', type: REG_SZ, data: ''}
@@ -103,7 +103,7 @@ actions:
  - !registryValue: {path: 'HKCR\ms-gamebar\shell\open\command', value: '', type: REG_EXPAND_SZ, data: '%WINDIR%\System32\systray.exe'}
 
  # disable widgets
- - !registryValue: {path: 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced', value: 'TaskbarDa', type: REG_DWORD, data: '0'}
+ - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'TaskbarDa', type: REG_DWORD, data: '0'}
 
  # svcsplit host (can run during ISO injection)
  - !registryValue: {path: 'HKLM\SYSTEM\ControlSet001\Control', value: 'SvcHostSplitThresholdInKB', type:  REG_DWORD, data: '4294967295', iso: true}
