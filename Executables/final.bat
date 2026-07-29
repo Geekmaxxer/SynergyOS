@@ -27,12 +27,15 @@ Reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Sh
 
 
 :: configure boot settings
-bcdedit /timeout 10
+:: NOTE: bootmenupolicy Legacy makes the boot menu timeout visible on every boot,
+:: so keep the timeout short rather than the 10s this used to sit at.
+bcdedit /timeout 3
 bcdedit /set disabledynamictick yes
 bcdedit /deletevalue useplatformclock
 bcdedit /deletevalue useplatformtick
 bcdedit /set bootmenupolicy Legacy
-bcdedit /set nx optin
+:: `bcdedit /set nx optin` moved to mitigations.bat - it is a mitigation downgrade
+:: and belongs behind the "Disable Exploit Mitigations" opt-in, not here.
 
 :: disable DMA remapping
 for /f %%i in ('Reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services" /s /f DmaRemappingCompatible ^| find /i "Services\" ') do (
@@ -58,12 +61,7 @@ Reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t 
 Reg add "HKLM\SOFTWARE\Microsoft\PolicyManager\default\ApplicationManagement\AllowGameDVR" /v "value" /t REG_DWORD /d "0" /f 
 
 
-for /f "tokens=*" %%i in ('reg query "HKLM\SYSTEM\CurrentControlSet\Enum\SCSI" ^| findstr "HKEY"') do (
-    for /f "tokens=*" %%a in ('reg query "%%i" ^| findstr "HKEY"') do (
-        Reg add "%%a\Device Parameters\Disk" /v CacheIsPowerProtected /t REG_DWORD /d 1 /f
-        Reg add "%%a\Device Parameters\Disk" /v UserWriteCacheSetting /t REG_DWORD /d 1 /f
-    )
-)
+:: (the SCSI write-cache loop that used to be duplicated here is already applied above)
 
 :: configure NTFS settings
 fsutil behavior set disablelastaccess 1
@@ -72,28 +70,22 @@ fsutil behavior set disablecompression 1
 fsutil quota disable C:
 
 :: configure powershell
-powershell Set-ExecutionPolicy Unrestricted -Force
+:: RemoteSigned still allows local scripts but keeps signature checks on downloaded
+:: ones. Unrestricted here left every downloaded .ps1 runnable with no prompt.
+powershell Set-ExecutionPolicy RemoteSigned -Force
 setx POWERSHELL_TELEMETRY_OPTOUT 1
 
-:: Disable VBS
-Reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\HypervisorEnforcedCodeIntegrity" /v "Enabled" /t REG_DWORD /d 0 /f
-Reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /t REG_DWORD /d 0 /f
-Reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\CredentialGuard" /v "Enabled" /t REG_DWORD /d 0 /f
-Reg add "HKLM\SYSTEM\CurrentControlSet\Control\DeviceGuard\Scenarios\KernelShadowStacks" /v "Enabled" /t REG_DWORD /d 0 /f
-Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v "RunAsPPL" /t REG_DWORD /d 0 /f
+:: VBS / HVCI / Credential Guard / LSA Protection are now in vbs.bat, gated behind
+:: the "Disable VBS / HVCI / Credential Guard" opt-in. RunAsPPL=0 in particular is
+:: what stops credential-dumping tools reading lsass, so it must not be silent.
 
 :: Enable Optimizations for Windowed/Borderless Games
 Reg add "HKCU\Software\Microsoft\DirectX\UserGpuPreferences" /v "DirectXUserGlobalSettings" /t REG_SZ /d "SwapEffectUpgradeEnable=1;" /f
 
-:: disable gamebarpresencewriter and other apps
-takeown /f "%WinDir%\System32\GameBarPresenceWriter.exe" /a  
-icacls "%WinDir%\System32\GameBarPresenceWriter.exe" /grant Administrators:(F) 
-ren "%WinDir%\System32\GameBarPresenceWriter.exe" "GameBarPresenceWriter32131dada.exe"
-
-takeown /f "%WinDir%\System32\mobsync.exe" /a  
-icacls "%WinDir%\System32\mobsync.exe" /grant Administrators:(F) 
-ren "%WinDir%\System32\mobsync.exe" "mobsyncold.exe"
-
+:: disable gamebarpresencewriter
+:: Renaming binaries inside System32 (and granting Administrators F on them) breaks
+:: SFC/DISM and future servicing. GameDVR is already fully disabled by policy above,
+:: so the rename is unnecessary; mobsync is covered by disabling CscService.
 
 :: disable search indexing
 sc stop wsearch

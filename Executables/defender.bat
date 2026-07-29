@@ -9,7 +9,9 @@ taskkill /f /im SecurityHealthService.exe >nul 2>&1
 taskkill /f /im SecurityHealthSystray.exe >nul 2>&1
 taskkill /f /im SkypeBackgroundHost.exe >nul 2>&1
 taskkill /f /im MsMpEng.exe >nul 2>&1
-taskkill /f /im msiexec.exe >nul 2>&1
+:: msiexec.exe deliberately NOT killed here: software.yml runs chrome.msi and a dozen
+:: vcredist MSIs through msiexec during the same playbook run, and force-killing the
+:: Windows Installer mid-transaction can leave those installs corrupted.
 taskkill /f /im smartscreen.exe >nul 2>&1
 
 :: ── Disable UAC File Virtualization ─────────────────────────────────────────

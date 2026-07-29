@@ -13,11 +13,12 @@ reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Ad
 
 reg add "HKEY_CURRENT_USER\Control Panel\Desktop" /v JPEGImportQuality /t REG_DWORD /d 100 /f
 
-:: questionable212122
-reg add "HKCU\Control Panel\Mouse" /v "RawMouseThrottleDuration" /t REG_DWORD /d "20" /f
-reg add "HKCU\Control Panel\Mouse" /v "RawMouseThrottleEnabled" /t REG_DWORD /d "1" /f
-reg add "HKCU\Control Panel\Mouse" /v "RawMouseThrottleLeeway" /t REG_DWORD /d "0" /f
-reg add "HKCU\Control Panel\Mouse" /v "RawMouseThrottleForced" /t REG_DWORD /d "1" /f
+:: RawMouseThrottle block removed (it was flagged "questionable212122" in-tree).
+:: RawMouseThrottleEnabled=1 / RawMouseThrottleForced=1 turn raw input throttling ON
+:: with a 20ms duration, which is the opposite of what a latency-focused playbook
+:: wants. If a future version wants to explicitly disable throttling, the values to
+:: set are RawMouseThrottleEnabled=0 and RawMouseThrottleForced=0 - but that should
+:: land with a measurement behind it rather than as an undocumented block.
 
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings" /v TaskbarEndTask /t REG_DWORD /d 1 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v TaskbarAnimations /t REG_DWORD /d 0 /f
@@ -43,5 +44,8 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v DisableConsum
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v DisableCloudOptimizedContent /t REG_DWORD /d 1 /f
 reg add "HKCU\SOFTWARE\Microsoft\Multimedia\Audio" /v UserDuckingPreference /t REG_DWORD /d 3 /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\BitLocker" /v PreventDeviceEncryption /t REG_DWORD /d 1 /f
+:: PreventDeviceEncryption removed. Blocking BitLocker/device encryption permanently,
+:: from a file named visuals.bat, with no mention anywhere in the UI or README, is not
+:: something a user can be expected to discover. Users who do not want device
+:: encryption can turn it off in Settings.
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Hidden /t REG_DWORD /d 1 /f
