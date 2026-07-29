@@ -40,7 +40,7 @@ Want to help fix a bug or build a new feature? Open the [Issues](https://github.
 
 > [!TIP]
 > Comment on the issue you want to work on before starting to work on it, so we can assign it to you to prevent ending up duplicating someone else's work.
-> Make sure to read the [Ameliorated Documentations](https://docs.amelabs.net) before making any changes to any as this will help you learn more about how AME Playbooks work.
+> Make sure to read the [Ameliorated Documentations](https://docs.amelabs.net) before making any changes to any file in SynergyOS as this will help you learn more about how AME Playbooks work.
 
 ## Credits
 
