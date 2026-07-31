@@ -9,7 +9,10 @@ param (
 # Direct downloads with hidden installers — fast, reliable, and fully silent during playbook execution.       #
 # ----------------------------------------------------------------------------------------------------------- #
 
-$timeouts = @("--connect-timeout", "10", "--retry", "5", "--retry-delay", "0", "--retry-all-errors")
+# --fail is required: without it curl exits 0 on an HTTP 404/500 and happily writes
+# the error page to the output path, which then gets Start-Process'd as if it were
+# the installer. --proto =https keeps a hijacked redirect from downgrading to http.
+$timeouts = @("--fail", "--proto", "=https", "--proto-redir", "=https", "--connect-timeout", "10", "--retry", "5", "--retry-delay", "0", "--retry-all-errors")
 $msiArgs = "/qn /quiet /norestart ALLUSERS=1 REBOOT=ReallySuppress"
 $arm = ((Get-CimInstance -Class Win32_ComputerSystem).SystemType -match 'ARM64') -or ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64')
 
@@ -18,15 +21,57 @@ function Remove-TempDirectory {
     Remove-Item -Path $tempDir -Force -Recurse -EA 0
 }
 
+# Download to $Path and refuse to return unless we got a real file. $Sha256 is
+# optional; when supplied the file is rejected on mismatch. `if (!$?)` was not a
+# reliable check after curl.exe - $LASTEXITCODE is.
+function Get-RemoteFile {
+    param(
+        [Parameter(Mandatory = $true)][string]$Url,
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Name,
+        [string]$Sha256
+    )
+
+    & curl.exe -LSs $Url -o $Path $timeouts
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Downloading $Name failed (curl exit $LASTEXITCODE)."
+        return $false
+    }
+
+    if (!(Test-Path $Path) -or (Get-Item $Path).Length -eq 0) {
+        Write-Error "Downloading $Name produced no file."
+        return $false
+    }
+
+    if ($Sha256) {
+        $actual = (Get-FileHash -Path $Path -Algorithm SHA256).Hash
+        if ($actual -ne $Sha256) {
+            Write-Error "$Name failed checksum verification. Expected $Sha256, got $actual."
+            Remove-Item -Path $Path -Force -EA 0
+            return $false
+        }
+        # Write-Host, not Write-Output: anything written to the output pipeline inside
+        # this function would be returned alongside the boolean and break the callers.
+        Write-Host "$Name checksum verified."
+    }
+
+    return $true
+}
+
 $tempDir = Join-Path -Path $env:TEMP -ChildPath ([guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 Push-Location $tempDir
 
 # SynToolkit
+# The release URL is version-pinned, so the checksum can be pinned alongside it.
+# Update both together when bumping the SynToolkit version.
+$synToolkitSha256 = '110928B39A7B62356A9893A3C7116D68DCD2691A66B59E7FCE1856E195275843'
 if ($SynToolkit) {
-    & curl.exe -LSs "https://github.com/Synergy-Tweaks/SynToolkit/releases/download/1.5/SynToolkit-Setup.exe" -o "$tempDir\SynToolkit-Setup.exe" $timeouts
-    if (!$?) {
-        Write-Error "Downloading SynToolkit failed."
+    Write-Output "Downloading SynToolkit..."
+    if (!(Get-RemoteFile -Url "https://github.com/Synergy-Tweaks/SynToolkit/releases/download/1.5/SynToolkit-Setup.exe" `
+                         -Path "$tempDir\SynToolkit-Setup.exe" -Name "SynToolkit" -Sha256 $synToolkitSha256)) {
+        Remove-TempDirectory
         exit 1
     }
 
@@ -40,9 +85,9 @@ if ($SynToolkit) {
 # Brave
 if ($Brave) {
     Write-Output "Downloading Brave..."
-    & curl.exe -LSs "https://laptop-updates.brave.com/latest/winx64" -o "$tempDir\BraveSetup.exe" $timeouts
-    if (!$?) {
-        Write-Error "Downloading Brave failed."
+    if (!(Get-RemoteFile -Url "https://laptop-updates.brave.com/latest/winx64" `
+                         -Path "$tempDir\BraveSetup.exe" -Name "Brave")) {
+        Remove-TempDirectory
         exit 1
     }
 
@@ -70,9 +115,9 @@ if ($Firefox) {
     $firefoxArch = ('win64', 'win64-aarch64')[$arm]
 
     Write-Output "Downloading Firefox..."
-    & curl.exe -LSs "https://download.mozilla.org/?product=firefox-latest-ssl&os=$firefoxArch&lang=en-US" -o "$tempDir\firefox.exe" $timeouts
-    if (!$?) {
-        Write-Error "Downloading Firefox failed."
+    if (!(Get-RemoteFile -Url "https://download.mozilla.org/?product=firefox-latest-ssl&os=$firefoxArch&lang=en-US" `
+                         -Path "$tempDir\firefox.exe" -Name "Firefox")) {
+        Remove-TempDirectory
         exit 1
     }
 
@@ -87,9 +132,9 @@ if ($Firefox) {
 if ($Chrome) {
     Write-Output "Downloading Google Chrome..."
     $chromeArch = ('64', '_Arm64')[$arm]
-    & curl.exe -LSs "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise$chromeArch.msi" -o "$tempDir\chrome.msi" $timeouts
-    if (!$?) {
-        Write-Error "Downloading Chrome failed."
+    if (!(Get-RemoteFile -Url "https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise$chromeArch.msi" `
+                         -Path "$tempDir\chrome.msi" -Name "Google Chrome")) {
+        Remove-TempDirectory
         exit 1
     }
 
@@ -137,7 +182,10 @@ foreach ($a in $vcredists.GetEnumerator()) {
     $vcExePath = "$tempDir\vcredist-$vcName.exe"
 
     Write-Output "Downloading and installing Visual C++ Runtime $vcName..."
-    & curl.exe -LSs "$vcUrl" -o "$vcExePath" $timeouts
+    if (!(Get-RemoteFile -Url $vcUrl -Path $vcExePath -Name "Visual C++ Runtime $vcName")) {
+        Write-Output "Skipping Visual C++ Runtime $vcName."
+        continue
+    }
 
     if ($vcArgs -match ":") {
         $msiDir = "$tempDir\vcredist-$vcName"
@@ -159,19 +207,39 @@ foreach ($a in $vcredists.GetEnumerator()) {
 }
 
 # 7-Zip
+# The download URL is scraped from the 7-zip.org homepage, so the scrape result has
+# to be validated before it is used - previously a layout change upstream produced an
+# empty/multi-value match that was concatenated into a junk URL and executed anyway.
 $website = 'https://7-zip.org/'
 $7zipArch = ('x64', 'arm64')[$arm]
-$download = $website + ((Invoke-WebRequest $website -UseBasicParsing).Links.href | Where-Object { $_ -like "a/7z*-$7zipArch.exe" })
-Write-Output "Downloading 7-Zip..."
-& curl.exe -LSs $download -o "$tempDir\7zip.exe" $timeouts
-Write-Output "Installing 7-Zip..."
-Start-Process -FilePath "$tempDir\7zip.exe" -WindowStyle Hidden -ArgumentList '/S' -Wait
+$7zipLink = @((Invoke-WebRequest $website -UseBasicParsing).Links.href | Where-Object { $_ -like "a/7z*-$7zipArch.exe" })
+
+if ($7zipLink.Count -ne 1) {
+    Write-Error "Could not determine the 7-Zip download URL ($($7zipLink.Count) candidates). Skipping 7-Zip."
+}
+else {
+    $download = $website + $7zipLink[0]
+    Write-Output "Downloading 7-Zip..."
+    if (Get-RemoteFile -Url $download -Path "$tempDir\7zip.exe" -Name "7-Zip") {
+        Write-Output "Installing 7-Zip..."
+        Start-Process -FilePath "$tempDir\7zip.exe" -WindowStyle Hidden -ArgumentList '/S' -Wait
+    }
+}
 
 # Legacy DirectX runtimes
-& curl.exe -LSs "https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe" -o "$tempDir\directx.exe" $timeouts
-Write-Output "Extracting legacy DirectX runtimes..."
-Start-Process -FilePath "$tempDir\directx.exe" -WindowStyle Hidden -ArgumentList "/q /c /t:`"$tempDir\directx`"" -Wait
-Write-Output "Installing legacy DirectX runtimes..."
-Start-Process -FilePath "$tempDir\directx\dxsetup.exe" -WindowStyle Hidden -ArgumentList '/silent' -Wait
+Write-Output "Downloading legacy DirectX runtimes..."
+if (Get-RemoteFile -Url "https://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe" `
+                   -Path "$tempDir\directx.exe" -Name "legacy DirectX runtimes") {
+    Write-Output "Extracting legacy DirectX runtimes..."
+    Start-Process -FilePath "$tempDir\directx.exe" -WindowStyle Hidden -ArgumentList "/q /c /t:`"$tempDir\directx`"" -Wait
+
+    if (Test-Path "$tempDir\directx\dxsetup.exe") {
+        Write-Output "Installing legacy DirectX runtimes..."
+        Start-Process -FilePath "$tempDir\directx\dxsetup.exe" -WindowStyle Hidden -ArgumentList '/silent' -Wait
+    }
+    else {
+        Write-Error "DirectX redist did not extract as expected, skipping install."
+    }
+}
 
 Remove-TempDirectory

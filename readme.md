@@ -34,6 +34,23 @@ SynergyOS is distributed as an `.apbx` playbook using AME Wizard.
 > [!IMPORTANT]
 > Only download `SynergyOS.apbx` from this repo or our official Discord. We are not responsible for modified or repackaged copies distributed elsewhere.
 
+## Security options
+
+Four of the checkboxes shown during setup trade Windows security for compatibility or
+performance. All four are **unchecked by default** — nothing on this list is applied
+unless you tick it.
+
+| Option | What it does | Why you might not want it |
+| --- | --- | --- |
+| Disable Defender | Stops the Defender services and deletes its binaries | Irreversible without a repair install, and leaves the machine with no AV |
+| Disable Exploit Mitigations | Forces DEP, ASLR, SEHOP and CFG off machine-wide | Applies to every process, not just games; most anti-cheats refuse to run |
+| Disable User Account Control | `EnableLUA=0`, no elevation prompts | Everything you launch runs fully elevated, and UWP/Store apps stop working |
+| Disable VBS / HVCI / Credential Guard | Turns off virtualisation-based security and LSA Protection | LSA Protection is what stops credential-dumping tools reading `lsass` |
+
+Windows Update is paused (until 2038) by this playbook regardless of the options above.
+The Windows Update page in Settings is left reachable so you can resume updates when
+you want them.
+
 ## Contributing
 
 Want to help fix a bug or build a new feature? Open the [Issues](https://github.com/Synergy-Tweaks/SynergyOS/issues) tab to see individual tickets, or check the [project board](https://github.com/orgs/Synergy-Tweaks/projects) for a status view of what's in progress. We appreciate every single person that helps improve SynergyOS. 
