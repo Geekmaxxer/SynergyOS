@@ -33,9 +33,7 @@ actions:
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOwner', type: REG_SZ, data: 'SynergyOS', iso: true}
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOrganization', type: REG_SZ, data: 'Kwanteks', iso: true}
 
-  # Disable UAC (opt-in only - see the "Disable User Account Control" checkbox).
-  # With EnableLUA=0 every process the user starts runs fully elevated with no
-  # consent prompt, and UWP/Store apps stop launching. Left on by default.
+# Disable UAC
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}

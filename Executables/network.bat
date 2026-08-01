@@ -16,14 +16,7 @@ for /f "tokens=*" %%i in ('powershell -NoProfile -Command "(Get-CimInstance -Cla
   Reg add "HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces\%%i" /v "TcpDelAckTicks" /t REG_DWORD /d "0" /f
 ) 
 :: Unbind discovery/topology protocols only.
-::
-:: ms_server, ms_msclient and ms_tcpip6 were removed from this list:
-::   ms_server / ms_msclient - File and Printer Sharing + Client for Microsoft
-::     Networks. Unbinding them breaks all SMB access, so NAS shares, network
-::     printers and \\hostname paths stop working with no indication why.
-::   ms_tcpip6 - Microsoft explicitly does not support disabling IPv6, and several
-::     Windows components (including parts of the networking stack itself) assume
-::     the loopback IPv6 binding exists.
+
 powershell "Disable-NetAdapterBinding -name "*" -componentid ms_lldp, ms_lltdio, ms_implat, ms_rspndr"
 powershell Set-NetOffloadGlobalSetting -ReceiveSegmentCoalescing Enabled
 powershell Set-NetOffloadGlobalSetting -PacketCoalescingFilter Disabled

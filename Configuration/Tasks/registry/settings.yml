@@ -79,9 +79,6 @@ actions:
 
  # hide recommended section in start menu (can run during ISO injection)
  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'HideRecommendedSection', type: REG_DWORD, data: '1', iso: true}
- # IsEducationEnvironment removed: it tells the OS this is a managed education device
- # to get the same side effect, which also changes Store/licensing and feature-update
- # behaviour. The two HideRecommendedSection policies already do the intended job.
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start', value: 'HideRecommendedSection', type: REG_DWORD, data: '1', iso: true}
 
  # configure explorer
@@ -94,8 +91,6 @@ actions:
  - !registryValue: {path: 'HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32', value: '', type: REG_SZ, data: ''}
 
  # Win32Prio (can run during ISO injection)
- # CurrentControlSet, not the hardcoded ControlSet001 - ControlSet001 is not always
- # the active control set, so this could previously land on an inactive one.
  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Control\PriorityControl', value: 'Win32PrioritySeparation', type: REG_DWORD, data: '36', iso: true}
 
  # Disable opening gamebar when pressing the xbox button on an xbox controller
@@ -109,11 +104,6 @@ actions:
  # disable widgets
  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'TaskbarDa', type: REG_DWORD, data: '0'}
 
- # svcsplit host - removed.
- # Setting the threshold to 0xFFFFFFFF collapses every service into shared svchost
- # processes. That removes the per-service process isolation boundary (one crashing
- # or compromised service now sits in the same process as its neighbours) for a RAM
- # saving that is marginal on any machine this playbook targets.
 
  # remove gallery in file explorer
  - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Desktop\NameSpace_41040327\{e88865ea-0e1c-4e20-9aa6-edcd0212c87c}', operation: delete}
@@ -122,12 +112,16 @@ actions:
  - !powerShell: {command: 'Disable-MMAgent -MemoryCompression', wait: true}
 
  # disable windows defender
+ - !writeStatus {status: "Disabling Windows Defender"}
  - !cmd: {command: '"defender.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-defender"}
 
+ - !writeStatus {status: "Disabling Mitigations"}
  - !cmd: {command: '"mitigations.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-mitigations"}
 
+ - !writeStatus {status: "Disabling VBS"}
  - !cmd: {command: '"vbs.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-vbs"}
 
+ - !writeStatus {status: "Disabling Xbox"}
  - !cmd: {command: '"xbox.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "disable-xbox"}
 
  - !writeStatus {status: "Optimizing Network"}

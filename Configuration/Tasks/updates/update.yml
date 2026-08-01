@@ -11,8 +11,7 @@ actions:
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'PauseUpdatesExpiryTime', type: REG_SZ, data: '2038-01-19T03:14:07Z'}
   
   - !registryValue: {path: 'HKLM\SYSTEM\Setup\UpgradeNotification', value: 'UpgradeAvailable', type: REG_DWORD, data: '0'}
-  # was data: '0', which is "DO report infection information" - the inverse of what
-  # this block is for. 1 = do not report.
+ 
   - !registryValue: {path: 'HKLM\Software\Policies\Microsoft\MRT', value: 'DontReportInfectionInformation', type: REG_DWORD, data: '1'}
 
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Settings', value: 'DownloadMode', type: REG_SZ, data: '0'}
@@ -29,9 +28,7 @@ actions:
   - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', value: 'RestartNotificationsAllowed2', type: REG_DWORD, data: '0'}
 
   - !registryValue: {path: 'HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate', value: 'DoNotConnectToWindowsUpdateInternetLocations', type: REG_DWORD, data: '1'}
-  # SetDisableUXWUAccess removed. Updates staying paused is the playbook's choice to
-  # make; hiding the Windows Update page from Settings entirely is not, because it
-  # leaves the user no in-OS way to notice or undo it when they want a patch.
+
 
   - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\WindowsStore', value: 'AutoDownload', type: REG_DWORD, data: '2'}
   - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\WindowsStore', value: 'DisableOSUpgrade', type: REG_DWORD, data: '1'}

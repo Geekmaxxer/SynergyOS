@@ -27,15 +27,11 @@ Reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v Sh
 
 
 :: configure boot settings
-:: NOTE: bootmenupolicy Legacy makes the boot menu timeout visible on every boot,
-:: so keep the timeout short rather than the 10s this used to sit at.
 bcdedit /timeout 3
 bcdedit /set disabledynamictick yes
 bcdedit /deletevalue useplatformclock
 bcdedit /deletevalue useplatformtick
 bcdedit /set bootmenupolicy Legacy
-:: `bcdedit /set nx optin` moved to mitigations.bat - it is a mitigation downgrade
-:: and belongs behind the "Disable Exploit Mitigations" opt-in, not here.
 
 :: disable DMA remapping
 for /f %%i in ('Reg query "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services" /s /f DmaRemappingCompatible ^| find /i "Services\" ') do (
@@ -70,22 +66,12 @@ fsutil behavior set disablecompression 1
 fsutil quota disable C:
 
 :: configure powershell
-:: RemoteSigned still allows local scripts but keeps signature checks on downloaded
-:: ones. Unrestricted here left every downloaded .ps1 runnable with no prompt.
 powershell Set-ExecutionPolicy RemoteSigned -Force
 setx POWERSHELL_TELEMETRY_OPTOUT 1
-
-:: VBS / HVCI / Credential Guard / LSA Protection are now in vbs.bat, gated behind
-:: the "Disable VBS / HVCI / Credential Guard" opt-in. RunAsPPL=0 in particular is
-:: what stops credential-dumping tools reading lsass, so it must not be silent.
 
 :: Enable Optimizations for Windowed/Borderless Games
 Reg add "HKCU\Software\Microsoft\DirectX\UserGpuPreferences" /v "DirectXUserGlobalSettings" /t REG_SZ /d "SwapEffectUpgradeEnable=1;" /f
 
-:: disable gamebarpresencewriter
-:: Renaming binaries inside System32 (and granting Administrators F on them) breaks
-:: SFC/DISM and future servicing. GameDVR is already fully disabled by policy above,
-:: so the rename is unnecessary; mobsync is covered by disabling CscService.
 
 :: disable search indexing
 sc stop wsearch

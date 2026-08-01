@@ -7,10 +7,7 @@ actions:
 
  - !taskKill: {name: "explorer"}
 
- # The hardcoded Taskband Favorites/FavoritesResolve REG_BINARY blobs were removed.
- # They are serialised shell-link structures captured from a developer machine, so
- # they carried that machine's username and hostname into every install, and they
- # duplicate the File Explorer pin that LayoutTaskbar.xml already applies.
+
 
  # Edge
  - !taskKill: {name: "MicrosoftEdgeUpdate", option: "remove-edge"}
