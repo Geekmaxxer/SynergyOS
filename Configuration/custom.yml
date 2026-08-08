@@ -33,11 +33,16 @@ actions:
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOwner', type: REG_SZ, data: 'SynergyOS', iso: true}
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOrganization', type: REG_SZ, data: 'Kwanteks', iso: true}
 
-# Disable UAC
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ValidateAdminCodeSignatures', type:  REG_DWORD, data: '0', iso: true, option: "disable-uac"}
+# UAC — registry applies during ISO injection; bat/scripts run at OOBE / live only
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type: REG_DWORD, data: '1', iso: true, option: "enable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type: REG_DWORD, data: '1', iso: true, option: "enable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type: REG_DWORD, data: '5', iso: true, option: "enable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ValidateAdminCodeSignatures', type: REG_DWORD, data: '0', iso: true, option: "enable-uac"}
+ - !cmd: {command: '"SOS\2. Configuration\UAC\Enable UAC (default).bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "enable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'EnableLUA', type: REG_DWORD, data: '0', iso: true, option: "disable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'PromptOnSecureDesktop', type: REG_DWORD, data: '0', iso: true, option: "disable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ConsentPromptBehaviorAdmin', type: REG_DWORD, data: '0', iso: true, option: "disable-uac"}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System', value: 'ValidateAdminCodeSignatures', type: REG_DWORD, data: '0', iso: true, option: "disable-uac"}
 
  - !writeStatus {status: "Installing Software"}
  - !task: {path: 'Tasks\software.yml'}
@@ -61,8 +66,18 @@ actions:
  - !task {path: 'Tasks\services.yml'}
 
  - !writeStatus {status: "Applying Wallpaper"}
- - !powerShell: {command: '.\wallpaper.ps1 -Mode Desktop -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, runas: currentUserElevated}
- - !powerShell: {command: '.\wallpaper.ps1 -Mode LockScreen -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, runas: currentUserElevated}
+ # #region agent log
+ - !powerShell:
+     command: |
+       $logDir = 'C:\SynergyOS\Logs'; New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+       $img = Join-Path $env:SystemRoot 'Web\Wallpaper\sos.png'
+       $payload = @{ sessionId='077b5f'; runId='iso-oobe'; hypothesisId='D'; location='custom.yml:wallpaper'; message='wallpaper-precheck'; data=@{ imagePath=$img; exists=(Test-Path -LiteralPath $img); windir=$env:SystemRoot }; timestamp=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() } | ConvertTo-Json -Compress
+       Add-Content -LiteralPath (Join-Path $logDir 'debug-077b5f.ndjson') -Value $payload -Encoding utf8
+     wait: true
+     oobe: true
+ # #endregion
+ - !powerShell: {command: '.\wallpaper.ps1 -Mode Desktop -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, wait: true, runas: currentUserElevated}
+ - !powerShell: {command: '.\wallpaper.ps1 -Mode LockScreen -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, wait: true, runas: currentUserElevated}
 
 
  - !writeStatus {status: "Optimizing PowerShell"}

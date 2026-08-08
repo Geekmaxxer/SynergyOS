@@ -59,8 +59,6 @@ actions:
  - !appx: {name: '*MicrosoftFamily*', type: family}
  - !appx: {name: '*Microsoft.StartExperiencesApp*', type: family}
  - !appx: {name: '*CrossDeviceResume*', type: app}
-
-
  - !appx: {name: '*Client.CBS*', operation: clearCache}
  - !appx: {name: '*StartMenuExperienceHost*', operation: clearCache}
  - !appx: {name: '*Windows.Search*', operation: clearCache}

@@ -15,29 +15,29 @@ actions:
  - !taskKill: {name: "MicrosoftEdge*", option: "remove-edge"}
  - !taskKill: {name: "setup", pathContains: "\\Edge", option: "remove-edge"}
  - !taskKill: {name: "msedgewebview2", option: "remove-edge"}
- - !service: {name: "edgeupdate", operation: delete, option: "remove-edge"}
- - !service: {name: "edgeupdatem", operation: delete, option: "remove-edge"}
- - !service: {name: "MicrosoftEdgeElevationService", operation: delete, option: "remove-edge"} 
+ - !service: {name: "edgeupdate", operation: delete, option: "remove-edge", iso: true}
+ - !service: {name: "edgeupdatem", operation: delete, option: "remove-edge", iso: true}
+ - !service: {name: "MicrosoftEdgeElevationService", operation: delete, option: "remove-edge", iso: true} 
  - !cmd: {command: '"edge.bat"', runas: trustedInstaller, exeDir: true, wait: true, option: "remove-edge"}
  - !appx: {name: 'Microsoft.MicrosoftEdge_8wekyb3d8bbwe', type: family, option: "remove-edge"}
- - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe', operation: add, option: "remove-edge"}
- - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftEdge_8wekyb3d8bbwe', operation: add, option: "remove-edge"}
+ - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftEdge.Stable_8wekyb3d8bbwe', operation: add, option: "remove-edge", iso: true}
+ - !registryKey: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned\Microsoft.MicrosoftEdge_8wekyb3d8bbwe', operation: add, option: "remove-edge", iso: true}
  
  # Onedrive
  - !status: {status: 'Removing OneDrive'}
  - !taskKill: {name: "OneDriveStandaloneUpdater"}
  - !taskKill: {name: "OneDriveSetup"}
  - !taskKill: {name: "OneDrive*"}
- - !service: {name: "OneSyncSvc*", operation: delete}
+ - !service: {name: "OneSyncSvc*", operation: delete, iso: true}
 
  - !cmd: {command: '"oned.bat"', exeDir: true, runas: trustedInstaller, wait: true}
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run', value: 'OneDrive', operation: delete}
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run', value: 'OneDriveSetup', operation: delete}
- - !file: {path: "%windir%\\System32\\OneDriveSetup.exe"}
- - !file: {path: "%windir%\\SysWOW64\\OneDriveSetup.exe"}
- - !file: {path: "%windir%\\SysWOW64\\OneDriveSettingSyncProvider.dll"}
- - !file: {path: "%SystemDrive%\\OneDriveTemp"}
- - !file: {path: "%ProgramData%\\Microsoft OneDrive"}
+ - !file: {path: "%windir%\\System32\\OneDriveSetup.exe", iso: true}
+ - !file: {path: "%windir%\\SysWOW64\\OneDriveSetup.exe", iso: true}
+ - !file: {path: "%windir%\\SysWOW64\\OneDriveSettingSyncProvider.dll", iso: true}
+ - !file: {path: "%SystemDrive%\\OneDriveTemp", iso: true}
+ - !file: {path: "%ProgramData%\\Microsoft OneDrive", iso: true}
 
 
  # AI mumbo jumbo
@@ -62,6 +62,7 @@ actions:
  - !service:
     name: "WSAIFabricSvc"
     operation: delete
+    iso: true
 
  - !appx: {name: '*MicrosoftWindows.Client.AIX*', type: family}
  - !appx: {name: '*Microsoft.Copilot*', type: family}
@@ -69,16 +70,15 @@ actions:
  - !appx: {name: '*Client.CoPilot*', type: family}
  - !appx: {name: '*Ai.Copilot*', type: family}
  - !appx: {name: '*Client.CoreAI*', type: family}
-
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot', value: 'TurnOffWindowsCopilot', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableAIDataAnalysis', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'AllowRecallEnablement', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableClickToDo', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'TurnOffSavingSnapshots', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableSettingsAgent', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat', value: 'IsUserEligible', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\Shell\Copilot', value: 'IsCopilotAvailable', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\Shell\Copilot', value: 'CopilotDisabledReason', type: REG_SZ, data: 'FeatureIsDisabled'}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot', value: 'TurnOffWindowsCopilot', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableAIDataAnalysis', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'AllowRecallEnablement', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableClickToDo', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'TurnOffSavingSnapshots', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableSettingsAgent', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\Shell\Copilot\BingChat', value: 'IsUserEligible', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\Shell\Copilot', value: 'IsCopilotAvailable', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\Shell\Copilot', value: 'CopilotDisabledReason', type: REG_SZ, data: 'FeatureIsDisabled', iso: true}
  - !registryValue: {path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsCopilot', value: 'TurnOffWindowsCopilot', type: REG_DWORD, data: '1'}
  - !registryValue: {path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'DisableAIDataAnalysis', type: REG_DWORD, data: '1'}
  - !registryValue: {path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\WindowsAI', value: 'AllowRecallEnablement', type: REG_DWORD, data: '0'}
@@ -91,26 +91,26 @@ actions:
  - !registryValue: {path: 'HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced', value: 'ShowCopilotButton', type: REG_DWORD, data: '0'}
  - !registryValue: {path: 'HKCU\Software\Microsoft\input\Settings', value: 'InsightsEnabled', type: REG_DWORD, data: '0'}
  - !registryValue: {path: 'HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer', value: 'DisableSearchBoxSuggestions', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'CopilotCDPPageContext', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'CopilotPageContext', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'HubsSidebarEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'CopilotPageContext', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'EdgeEntraCopilotPageContext', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'Microsoft365CopilotChatIconEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'EdgeHistoryAISearchEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'ComposeInlineEnabled', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'GenAILocalFoundationalModelSettings', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings', value: 'AutoOpenCopilotLargeScreens', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\generativeAI', value: 'Value', type: REG_SZ, data: 'Deny'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy', value: 'LetAppsAccessGenerativeAI', type: REG_DWORD, data: '2'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy', value: 'LetAppsAccessSystemAIModels', type: REG_DWORD, data: '2'}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'CopilotCDPPageContext', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'CopilotPageContext', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'HubsSidebarEnabled', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'CopilotPageContext', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'EdgeEntraCopilotPageContext', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'Microsoft365CopilotChatIconEnabled', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'EdgeHistoryAISearchEnabled', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'ComposeInlineEnabled', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Edge', value: 'GenAILocalFoundationalModelSettings', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Notifications\Settings', value: 'AutoOpenCopilotLargeScreens', type: REG_DWORD, data: '0', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\generativeAI', value: 'Value', type: REG_SZ, data: 'Deny', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy', value: 'LetAppsAccessGenerativeAI', type: REG_DWORD, data: '2', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy', value: 'LetAppsAccessSystemAIModels', type: REG_DWORD, data: '2', iso: true}
  - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsCopilot', value: 'AllowCopilotRuntime', type: REG_DWORD, data: '0'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableImageCreator', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableCocreator', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableGenerativeFill', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableGenerativeErase', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableRemoveBackground', type: REG_DWORD, data: '1'}
- - !registryValue: {path: 'HKLM\SOFTWARE\Policies\WindowsNotepad', value: 'DisableAIFeatures', type: REG_DWORD, data: '1'}
- - !registryKey: {path: 'HKCR\ms-office-ai', operation: delete}
- - !registryKey: {path: 'HKCR\ms-copilot', operation: delete}
- - !registryKey: {path: 'HKCR\ms-clicktodo', operation: delete}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableImageCreator', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableCocreator', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableGenerativeFill', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableGenerativeErase', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Paint', value: 'DisableRemoveBackground', type: REG_DWORD, data: '1', iso: true}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Policies\WindowsNotepad', value: 'DisableAIFeatures', type: REG_DWORD, data: '1', iso: true}
+ - !registryKey: {path: 'HKCR\ms-office-ai', operation: delete, iso: true}
+ - !registryKey: {path: 'HKCR\ms-copilot', operation: delete, iso: true}
+ - !registryKey: {path: 'HKCR\ms-clicktodo', operation: delete, iso: true}
