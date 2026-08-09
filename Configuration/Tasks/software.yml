@@ -14,13 +14,14 @@ actions:
       runas: currentUserElevated
       oobe: true
 
-  # SynToolkit
-  - !status: {status: 'Installing SynToolkit'}
+  # SynToolkit (optional)
+  - !status: {status: 'Installing SynToolkit', option: 'syntoolkit'}
   - !powerShell:
       command: '.\SOFTWARE.ps1 -SynToolkit'
       exeDir: true
       wait: true
       weight: 100
+      option: 'syntoolkit'
       runas: currentUserElevated
       oobe: true
 
