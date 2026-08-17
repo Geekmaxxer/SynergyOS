@@ -89,14 +89,10 @@ actions:
 
  - !writeStatus {status: "Finalizing"}
  - !cmd: {command: '"startmen.cmd"', runas: trustedInstaller, exeDir: true, wait: true}
- - !powerShell:
-    command: |
-      $explorerProcess = Get-Process -Name explorer -ErrorAction SilentlyContinue
-      if ($explorerProcess) {
-        Stop-Process -Name explorer -Force
-      }
-      Start-Process explorer
-    runas: currentUserElevated 
+ - !cmd:
+     command: 'taskkill /f /im explorer.exe & reg delete "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Taskband" /f & start explorer.exe'
+     runas: currentUserElevated
+     wait: true 
  - !cmd: {command: '"final.bat"', exeDir: true, runas: trustedInstaller, wait: true}
  - !cmd: {command: '"updhealth.bat"', exeDir: true, runas: trustedInstaller, wait: true}
  - !powerShell: {command: '.\cleanup.ps1', exeDir: true, runas: trustedInstaller, wait: true}
