@@ -28,6 +28,7 @@ actions:
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'Model', type: REG_SZ, data: 'SYNERGYOS', iso: true}
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'Manufacturer', type: REG_SZ, data: 'Kwanteks', iso: true}
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation', value: 'SupportURL', type: REG_SZ, data: 'https://discord.gg/kwanteks', iso: true}
+ - !run: {exe: 'label', args: '%systemdrive% SynergyOS'}
 
   # Set Registered Owner/Organization (shows in About Windows)
  - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion', value: 'RegisteredOwner', type: REG_SZ, data: 'SynergyOS', iso: true}
