@@ -7,27 +7,6 @@ param(
     [string]$ImagePath
 )
 
-#region agent log
-try {
-    $logDir = 'C:\SynergyOS\Logs'
-    New-Item -ItemType Directory -Path $logDir -Force | Out-Null
-    $payload = @{
-        sessionId = '077b5f'
-        runId = 'iso-oobe'
-        hypothesisId = 'E'
-        location = 'wallpaper.ps1'
-        message = "wallpaper-$Mode"
-        data = @{
-            imagePath = $ImagePath
-            exists = (Test-Path -LiteralPath $ImagePath)
-            mode = $Mode
-        }
-        timestamp = [DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds()
-    } | ConvertTo-Json -Compress
-    Add-Content -LiteralPath (Join-Path $logDir 'debug-077b5f.ndjson') -Value $payload -Encoding utf8
-} catch {}
-#endregion
-
 function Set-DesktopWallpaper {
     param(
         [string]$imagePath

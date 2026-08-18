@@ -94,23 +94,18 @@ Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Wdf" /v "WdfGlobalSleepStudyDisab
 :: Enable HAGS
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "HwSchMode" /t REG_DWORD /d "2" /f
 
-:: Get the version number from the `ver` command
-for /f "tokens=3 delims=[]. " %%a in ('ver') do set version=%%a
+:: Get the build number from the `ver` command
+for /f "tokens=6 delims=[]. " %%a in ('ver') do set version=%%a
 
 :: Check if the version is greater than or equal to 10.0.22000 (which is the version for Windows 11)
 if %version% geq 22000 (
-    set w11=true
-) else (
-    set w11=false
-)
-if not defined w11 (
-  bcdedit /set description "SynergyOS 10"
-  Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v "Model"  /t REG_SZ /d "SOS 10" /f >NUL 2>nul
-  Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOrganization" /t REG_SZ /d "SynergyOS 10" /f >NUL 2>nul
-) else (
   bcdedit /set description "SynergyOS 11"
   Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v "Model"  /t REG_SZ /d "SOS 11" /f >NUL 2>nul
   Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOrganization" /t REG_SZ /d "SynergyOS 11" /f >NUL 2>nul
+) else (
+  bcdedit /set description "SynergyOS 10"
+  Reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\OEMInformation" /v "Model"  /t REG_SZ /d "SOS 10" /f >NUL 2>nul
+  Reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion" /v "RegisteredOrganization" /t REG_SZ /d "SynergyOS 10" /f >NUL 2>nul
 )
 
 :: add new batch file to context menu

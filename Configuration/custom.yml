@@ -67,16 +67,6 @@ actions:
  - !task {path: 'Tasks\services.yml'}
 
  - !writeStatus {status: "Applying Wallpaper"}
- # #region agent log
- - !powerShell:
-     command: |
-       $logDir = 'C:\SynergyOS\Logs'; New-Item -ItemType Directory -Path $logDir -Force | Out-Null
-       $img = Join-Path $env:SystemRoot 'Web\Wallpaper\sos.png'
-       $payload = @{ sessionId='077b5f'; runId='iso-oobe'; hypothesisId='D'; location='custom.yml:wallpaper'; message='wallpaper-precheck'; data=@{ imagePath=$img; exists=(Test-Path -LiteralPath $img); windir=$env:SystemRoot }; timestamp=[DateTimeOffset]::UtcNow.ToUnixTimeMilliseconds() } | ConvertTo-Json -Compress
-       Add-Content -LiteralPath (Join-Path $logDir 'debug-077b5f.ndjson') -Value $payload -Encoding utf8
-     wait: true
-     oobe: true
- # #endregion
  - !powerShell: {command: '.\wallpaper.ps1 -Mode Desktop -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, wait: true, runas: currentUserElevated}
  - !powerShell: {command: '.\wallpaper.ps1 -Mode LockScreen -ImagePath $env:systemroot\Web\Wallpaper\sos.png', exeDir: true, wait: true, runas: currentUserElevated}
 
