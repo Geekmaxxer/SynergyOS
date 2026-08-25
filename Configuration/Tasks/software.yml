@@ -4,6 +4,7 @@ description: Install Software
 privilege: TrustedInstaller 
 actions:
 
+  # oobe: true — SOFTWARE.ps1 needs a live user session and network; runs at first boot / live run
   # Utilities - 7-Zip, Visual C++ Runtimes, DirectX
   - !status: {status: 'Installing Software'}
   - !powerShell:
@@ -55,8 +56,9 @@ actions:
       option: 'browser-chrome'
       runas: currentUserElevated
       oobe: true
+  # !download defaults to injection (offline cache); !cmd installs run at OOBE / live run
   - !status: {status: 'Installing .NET 8 Desktop Runtime'}
-  - !download: {url: 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe', destination: '%temp%\dotnet8_desktop_x64.exe', overwrite: true}
-  - !download: {url: 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x86.exe', destination: '%temp%\dotnet8_desktop_x86.exe', overwrite: true}
+  - !download: {url: 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x64.exe', destination: '%temp%\dotnet8_desktop_x64.exe', overwrite: true, package: 'dotnet'}
+  - !download: {url: 'https://aka.ms/dotnet/8.0/windowsdesktop-runtime-win-x86.exe', destination: '%temp%\dotnet8_desktop_x86.exe', overwrite: true, package: 'dotnet'}
   - !cmd: {command: '"%temp%\dotnet8_desktop_x64.exe" /install /quiet /norestart', runas: currentUserElevated, wait: true}
   - !cmd: {command: '"%temp%\dotnet8_desktop_x86.exe" /install /quiet /norestart', runas: currentUserElevated, wait: true}

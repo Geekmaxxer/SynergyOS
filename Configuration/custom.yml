@@ -3,8 +3,10 @@ title: Custom
 privilege: trustedInstaller
 actions:
 
+ # oobe: false — live-run compatibility preflight; skipped during ISO first boot
  - !powerShell: {command: '.\suitability.ps1', exeDir: true, wait: true, oobe: false}
 
+ # Dynamic actions below (no iso tag) run at OOBE after ISO install and on live playbook runs
  - !cmd: {command: 'reg import RunAsTI.reg', exeDir: true, wait: true, runas: currentUserElevated}
 
  - !writeStatus {status: "Copying Files"}
@@ -88,13 +90,4 @@ actions:
  - !cmd: {command: '"updhealth.bat"', exeDir: true, runas: trustedInstaller, wait: true}
  - !powerShell: {command: '.\cleanup.ps1', exeDir: true, runas: trustedInstaller, wait: true}
 
- - !writeStatus: {status: 'Backing up Services'}
- - !powerShell:
-    exeDir: true
-    wait: true
-    command: |
-      $path = Join-Path ([Environment]::GetFolderPath('Windows')) "ServicesBackup\SynergyServices.reg"
-      
-      if (-not (Test-Path -Path $path -PathType Leaf)) {
-          .\backup.ps1 -FilePath $path
-      }
+ 
