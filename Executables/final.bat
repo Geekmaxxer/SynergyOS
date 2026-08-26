@@ -72,16 +72,19 @@ setx POWERSHELL_TELEMETRY_OPTOUT 1
 :: Enable Optimizations for Windowed/Borderless Games
 Reg add "HKCU\Software\Microsoft\DirectX\UserGpuPreferences" /v "DirectXUserGlobalSettings" /t REG_SZ /d "SwapEffectUpgradeEnable=1;" /f
 
+:: Svchost Split
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control" /v "SvcHostSplitThresholdInKB" /t REG_DWORD /d "4294967295" /f
 
 :: disable search indexing
 sc stop wsearch
 sc config wsearch start=disabled
 
-:: trying to disable sysmain a second time here because sometimes it doesnt
+:: second pass
 sc stop sysmain
 sc config sysmain start=disabled
 
 :: Session Manager
+Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "DisableWpbtExecution" /t REG_DWORD /d "1" /f
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d "0" /f
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "IdleScanInterval" /t REG_DWORD /d "0" /f
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "SerializeTimerExpiration" /t REG_DWORD /d "1" /f
@@ -93,7 +96,6 @@ Reg add "HKLM\SYSTEM\CurrentControlSet\Control\Wdf" /v "WdfGlobalSleepStudyDisab
 
 :: Enable HAGS
 Reg add "HKLM\SYSTEM\CurrentControlSet\Control\GraphicsDrivers" /v "HwSchMode" /t REG_DWORD /d "2" /f
-
 :: Get the build number from the `ver` command
 for /f "tokens=6 delims=[]. " %%a in ('ver') do set version=%%a
 
