@@ -36,4 +36,8 @@ actions:
  # disable pca (can run during ISO injection)
  - !registryValue: {path: 'HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat', value: 'DisablePCA', type: REG_DWORD, data: '1', iso: true}
  - !registryValue: {path: 'HKLM\SYSTEM\CurrentControlSet\Services\PcaSvc', value: 'Start', type: REG_DWORD, data: '4', iso: true}
+ 
+ # turn off blocking for downloaded files
+ - !registryValue: {path: 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments', value: 'SaveZoneInformation', type: REG_DWORD, data: '1'}
+ - !registryValue: {path: 'HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments', value: 'SaveZoneInformation', type: REG_DWORD, data: '1'}
 
