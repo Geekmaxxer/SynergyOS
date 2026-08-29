@@ -64,12 +64,10 @@ New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
 Push-Location $tempDir
 
 # SynToolkit
-# The release URL is version-pinned, so the checksum can be pinned alongside it.
-# Update both together when bumping the SynToolkit version.
-$synToolkitSha256 = '110928B39A7B62356A9893A3C7116D68DCD2691A66B59E7FCE1856E195275843'
+$synToolkitSha256 = 'BFB7CD62BCEDEF419EB347168257E35FB1444A163C3BECD110F12275E00EEBE8'
 if ($SynToolkit) {
     Write-Output "Downloading SynToolkit..."
-    if (!(Get-RemoteFile -Url "https://github.com/Synergy-Tweaks/SynToolkit/releases/download/1.5/SynToolkit-Setup.exe" `
+    if (!(Get-RemoteFile -Url "https://github.com/Synergy-Tweaks/SynToolkit/releases/download/1.6/SynToolkit-Setup.exe" `
                          -Path "$tempDir\SynToolkit-Setup.exe" -Name "SynToolkit" -Sha256 $synToolkitSha256)) {
         Remove-TempDirectory
         exit 1
