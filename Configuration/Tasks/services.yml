@@ -17,9 +17,9 @@ actions:
   - !service: {name: 'dps', operation: change, startup: 4, iso: true}
   - !service: {name: 'dusmsvc', operation: change, startup: 4, iso: true}
   - !service: {name: 'Fax', operation: change, startup: 4, iso: true}
-  - !service: {name: 'GpuEnergyDrv', operation: change, startup: 4, iso: true}
+  # Keep GpuEnergyDrv enabled - required for GPU power/brightness reporting
   - !service: {name: 'icssvc', operation: change, startup: 4, iso: true}
-  - !service: {name: 'intelpmt', operation: change, startup: 4, iso: true}
+  # Keep intelpmt enabled - required for Intel DTT / laptop power and GPU switching
   - !service: {name: 'LanmanServer', operation: change, startup: 4, iso: true}
   - !service: {name: 'lltdio', operation: change, startup: 4, iso: true}
   - !service: {name: 'MsLldp', operation: change, startup: 4, iso: true}
@@ -41,9 +41,7 @@ actions:
   - !service: {name: 'RetailDemo', operation: change, startup: 4, iso: true}
   - !service: {name: 'ScDeviceEnum', operation: change, startup: 4, iso: true}
   - !service: {name: 'SEMgrSvc', operation: change, startup: 4, iso: true}
-  - !service: {name: 'SensorDataService', operation: change, startup: 4, iso: true}
-  - !service: {name: 'SensorService', operation: change, startup: 4, iso: true}
-  - !service: {name: 'SensrSvc', operation: change, startup: 4, iso: true}
+  # Keep sensor services enabled - required for auto-brightness / ALS on laptops
   - !service: {name: 'SharedAccess', operation: change, startup: 4, iso: true}
   - !service: {name: 'Spooler', operation: change, startup: 4, iso: true}
   - !service: {name: 'SSDPSRV', operation: change, startup: 4, iso: true}
