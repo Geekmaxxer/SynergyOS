@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://discord.gg/kwanteks" target="_blank"><img src="https://raw.githubusercontent.com/Synergy-Tweaks/SynergyOS/main/Executables/SOS/4.%20More%20Wallpapers/SynergyOS%20Wallpaper%20v3.8%20silver%20main.png" alt="SynergyOS" width="800"></a>
+  <a href="https://dsc.gg/kwanteks" target="_blank"><img src="https://raw.githubusercontent.com/Synergy-Tweaks/SynergyOS/main/Executables/SOS/4.%20More%20Wallpapers/SynergyOS%20Wallpaper%20v3.8%20silver%20main.png" alt="SynergyOS" width="800"></a>
 </h1>
   <p align="center">
     <a href="https://github.com/Synergy-Tweaks/SynergyOS/releases" target="_blank"><img alt="Release" src="https://img.shields.io/github/release/Synergy-Tweaks/SynergyOS?style=for-the-badge&color=1A91FF" /></a>
@@ -17,17 +17,16 @@
   <a href="https://github.com/Synergy-Tweaks/SynergyOS/discussions" target="_blank">💬 Discussions</a>
 </p>
 
-**Developed by Kwanteks and Bry1k**
+**Developed by [Kwanteks](https://github.com/kwanteks) and [Bry1k](https://github.com/bry1k)**
 
-## Background
-
-SynergyOS was created on the earlier work of KhorvieOS created by youtuber Khorvie Tech, updating and expanding with more tweaks.
+## What is SynergyOS?
+SynergyOS is a comprehensive, performance-focused Windows modification playbook built on the [Ameliorated (AME) Wizard](https://amelabs.net/) framework. Designed to maximize system speed, reduce latency, and user privacy, it provides a streamlined and optimized Windows environment tailored for gamers, power users, and performance enthusiasts.
 
 ## Deployment
 
-SynergyOS is distributed as an `.apbx` playbook using AME Wizard.
+SynergyOS is distributed as an `.apbx` playbook using AME Wizard to apply to your windows installation.
 
-1. Start with a clean, stock Windows ISO (22H2 through 26H1, LTSC supported).
+1. Start with a clean, stock Windows ISO (22H2 through 26H2, LTSC supported).
 2. Download AME Wizard from [amelabs.net](https://amelabs.net).
 3. Load `SynergyOS.apbx` and follow the prompts.
 
@@ -49,7 +48,7 @@ unless you tick it.
 
 Windows Update is paused (until 2038) by this playbook regardless of the options above.
 The Windows Update page in Settings is left reachable so you can resume updates when
-you want them.
+you want them. Make sure to reopen AME Wizard and click on `Run Again`.
 
 ## Contributing
 
@@ -62,7 +61,6 @@ Want to help fix a bug or build a new feature? Open the [Issues](https://github.
 ## Credits
 
 - **Lead Developers:** Kwanteks, Bry1k & Chr
-- **Original Inspiration:** [Khorvie Tech](https://youtube.com/@khorvietech)
 - **Framework:** [Amelabs / AME Wizard](https://amelabs.net)
 
 ## Connect
