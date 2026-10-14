@@ -60,12 +60,12 @@
   - Disable Xbox Services (Reversible by SynToolkit or Post Installation Folder)
   - Disable VBS / HVCI (Reduces Security / Reversible)
     - [Refer to this to understand security options.](https://github.com/Synergy-Tweaks/SynergyOS#security-options)
-      
-  - Optional security trade-offs. Leave unchecked unless you accept the risks.
+
+ - Optional security trade-offs. Leave unchecked unless you accept the risks.
    - Disable Defender (Reduces Security / Irreversible)
    - Disable Exploit Mitigations (Reduces Security / Reversible)
   **Some anti-cheat games require mitigations.**
-  - Choose whether User Account Control stays enabled or is disabled.
+- Choose whether User Account Control stays enabled or is disabled.
   - Disabling UAC removes all elevation prompts.
    - Enable UAC (Recommended)
    - Disable UAC (Reduces Security / Reversible)
