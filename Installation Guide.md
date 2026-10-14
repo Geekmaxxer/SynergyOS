@@ -56,9 +56,28 @@
 - Select general tweaks to apply during SynergyOS installation.
 - Selection Options
   - Install SynToolkit (Dedicated Application for Post Installation Management)
-  - Remove Edge (irreversible by can be reinstalled later on)(Selected by Default
+  - Remove Edge (irreversible by can be reinstalled later on)(Selected by Default)
   - Disable Xbox Services (Reversible by SynToolkit or Post Installation Folder)
+  - Disable VBS / HVCI (Reduces Security / Reversible)
+    - [Refer to this to understand security options.](https://github.com/Synergy-Tweaks/SynergyOS#security-options)
+      
+  - Optional security trade-offs. Leave unchecked unless you accept the risks.
+   - Disable Defender (Reduces Security / Irreversible)
+   - Disable Exploit Mitigations (Reduces Security / Reversible)
+  **Some anti-cheat games require mitigations.**
+  - Choose whether User Account Control stays enabled or is disabled.
+  - Disabling UAC removes all elevation prompts.
+   - Enable UAC (Recommended)
+   - Disable UAC (Reduces Security / Reversible)
+  - Only disable UAC if you fully understand.
+- Click  `Ok` after selecting your preferences 
+- Click `Next` to begin the Process.
 <img width="688" height="479" alt="image" src="https://github.com/user-attachments/assets/1b81cd8a-6abb-44b6-833a-90a6ea671646" />
+<img width="691" height="475" alt="image" src="https://github.com/user-attachments/assets/0aacc19d-6919-4c79-9f25-c44b167e589d" />
+<img width="689" height="475" alt="image" src="https://github.com/user-attachments/assets/53bf3267-2f4a-4255-801d-19930fdf8d2e" />
+
+
+
 
 
 
