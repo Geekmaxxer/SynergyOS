@@ -16,10 +16,9 @@
 
 **Step 2**
 - Launch `AME Wizard` as Administrator.
-<img width="684" height="480" alt="image" src="https://github.com/user-attachments/assets/42567c5a-e9e3-43b1-bf4f-93e982c3468b" />
-
 - Drag in the `SynergyOS.apbx` file into AME Wizard.
 - If Dragging in doesn't work then click `Use Existing` and click on `SynergyOS.apbx`
+<img width="684" height="480" alt="image" src="https://github.com/user-attachments/assets/42567c5a-e9e3-43b1-bf4f-93e982c3468b" />
 <img width="694" height="486" alt="image" src="https://github.com/user-attachments/assets/f276185d-2b4c-406d-a4dd-54c499ba1818" />
 
 **Step 3**
