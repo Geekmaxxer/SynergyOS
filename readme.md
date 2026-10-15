@@ -1,5 +1,6 @@
 <h1 align="center">
-  <a href="https://dsc.gg/kwanteks" target="_blank"><img src="https://raw.githubusercontent.com/Synergy-Tweaks/SynergyOS/main/Executables/SOS/4.%20More%20Wallpapers/SynergyOS%20Wallpaper%20v3.8%20silver%20main.png" alt="SynergyOS" width="800"></a>
+  <img width="3736" height="2508" alt="sos" src="https://github.com/user-attachments/assets/750bb727-b4ed-4373-829b-689a9a48df2e" />
+
 </h1>
   <p align="center">
     <a href="https://github.com/Synergy-Tweaks/SynergyOS/releases" target="_blank"><img alt="Release" src="https://img.shields.io/github/release/Synergy-Tweaks/SynergyOS?style=for-the-badge&color=1A91FF" /></a>
